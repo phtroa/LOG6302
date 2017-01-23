@@ -18,7 +18,15 @@ public:
 
   // Visites
   bool VisitCXXRecordDecl(clang::CXXRecordDecl *D);
+  //conditions
   bool VisitIfStmt(clang::IfStmt *S);
+  bool VisitSwitchStmt(clang::SwitchStmt *S);
+  //Sauts
+  bool VisitBreakStmt(clang::BreakStmt *S);
+  bool VisitContinueStmt(clang::ContinueStmt *S);
+  //boucles
+  bool VisitForStmt(clang::ForStmt *S);
+  bool VisitWhileStmt(clang::WhileStmt *S);
 
   // Traverses
   bool TraverseCXXMethodDecl(clang::CXXMethodDecl *D);
