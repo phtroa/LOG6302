@@ -9,6 +9,15 @@ bool Visitor::VisitCXXRecordDecl(clang::CXXRecordDecl *D) {
 }
 
 /**********************/
+/* variable traverse */
+/**********************/
+bool Visitor::VisitVarDecl(clang::VarDecl *VD) {
+  std::cout<<"[LOG6302] Visite de la variable \""<<VD->getNameAsString()<<"\"\n";
+
+  return true;
+}
+
+/**********************/
 /* If visit           */
 /**********************/
 bool Visitor::VisitIfStmt(clang::IfStmt *S) {

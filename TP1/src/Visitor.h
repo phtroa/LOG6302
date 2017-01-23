@@ -18,6 +18,8 @@ public:
 
   // Visites
   bool VisitCXXRecordDecl(clang::CXXRecordDecl *D);
+  //variables
+  bool VisitVarDecl(clang::VarDecl *VD);
   //conditions
   bool VisitIfStmt(clang::IfStmt *S);
   bool VisitSwitchStmt(clang::SwitchStmt *S);
