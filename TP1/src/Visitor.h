@@ -32,6 +32,14 @@ public:
 
   // Traverses
   bool TraverseCXXMethodDecl(clang::CXXMethodDecl *D);
+  bool TraverseCXXRecordDecl(clang::CXXRecordDecl *D);
+  bool TraverseVarDecl(clang::VarDecl *D);
+  bool TraverseIfStmt(clang::IfStmt *S);
+  bool TraverseSwitchStmt(clang::SwitchStmt *S);
+  bool TraverseBreakStmt(clang::BreakStmt *S);
+  bool TraverseContinueStmt(clang::ContinueStmt *S);
+  bool TraverseForStmt(clang::ForStmt *S);
+  bool TraverseWhileStmt(clang::WhileStmt *S);
 
 private:
   clang::ASTContext &context_;

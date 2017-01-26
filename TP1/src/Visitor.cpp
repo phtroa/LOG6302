@@ -94,3 +94,107 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
 
   return true;
 }
+
+/**********************/
+/* classe traverse    */
+/**********************/
+bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D) {
+  std::cout<<"[LOG6302] Traverse de la classe \""<<D->getNameAsString()<<"\"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseCXXRecordDecl(D);
+
+  std::cout<<"[LOG6302] Fin traverse de la classe \""<<D->getNameAsString()<<"\"\n";
+
+  return true;
+}
+
+/**********************/
+/* variable traverse  */
+/**********************/
+bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
+  std::cout<<"[LOG6302] Traverse de la variable \""<<D->getNameAsString()<<"\"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseVarDecl(D);
+
+  std::cout<<"[LOG6302] Fin traverse de la variable \""<<D->getNameAsString()<<"\"\n";
+
+  return true;
+}
+
+/**********************/
+/* If traverse        */
+/**********************/
+bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseIfStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
+
+  return true;
+}
+
+/**********************/
+/* switch traverse    */
+/**********************/
+bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseSwitchStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
+
+  return true;
+}
+
+/**********************/
+/* break traverse     */
+/**********************/
+bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'un saut : \" break\"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseBreakStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'un saut : \" break\"\n";
+
+  return true;
+}
+
+/**********************/
+/* continue traverse           */
+/**********************/
+bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'un saut : \" continue\"\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseContinueStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'un saut : \" continue\"\n";
+
+  return true;
+}
+
+/**********************/
+/* for traverse           */
+/**********************/
+bool Visitor::TraverseForStmt(clang::ForStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseForStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" for\"\n";
+
+  return true;
+}
+
+/**********************/
+/* while traverse           */
+/**********************/
+bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
+  std::cout<<"[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n";
+
+  clang::RecursiveASTVisitor<Visitor>::TraverseWhileStmt(S);
+
+  std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" while\"\n";
+
+  return true;
+}
