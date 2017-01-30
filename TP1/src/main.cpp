@@ -1,3 +1,4 @@
+#include <memory>
 #include <iostream>
 #include <clang/Tooling/Tooling.h>
 #include <clang/AST/ASTContext.h>
@@ -5,10 +6,11 @@
 #include <clang/Frontend/CompilerInstance.h>
 
 #include "Visitor.h"
+#include "MetricASTVisitor.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
-
+static std::shared_ptr<ASTTree> myAst;
 
 /******************************************************************************/
 /* MyASTConsumer                                                              */
@@ -19,6 +21,7 @@ class MyASTConsumer : public clang::ASTConsumer {
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
     Visitor visitor(Context);
     visitor.TraverseDecl(Context.getTranslationUnitDecl());
+    myAst = visitor.getAST();
   }
 };
 
@@ -73,7 +76,8 @@ int main(int argc, const char **argv) {
     clang::tooling::ClangTool tool(*compilation_database, compilation_database->getAllFiles());
     ret = tool.run(clang::tooling::newFrontendActionFactory<MyFrontendAction>());
 
-  } else {
+  }
+  else {
     // Single file compilation
 
     nb_files = 1;
@@ -91,6 +95,10 @@ int main(int argc, const char **argv) {
     );
     ret = invocation.run();
   }
+
+  //we compute metric
+  MetricASTVisitor metricV;
+  myAst->acceptVisitor(&metricV);
 
   return ret;
 }

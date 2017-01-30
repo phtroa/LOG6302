@@ -1,17 +1,14 @@
 #include "ProgramNode.h"
 
-ProgramNode::ProgramNode() : ABSNode(nullptr) {
+#include "ABSASTVisitor.h"
+
+ProgramNode::ProgramNode() {
 }
 
-//Ces méthodes ne devraient jamais être appelées
-void ProgramNode::incrCond() {
-}
-
-void ProgramNode::incrLoop() {
-}
-
-void ProgramNode::incrJump()  {
-}
-
-void ProgramNode::incrVar() {
+void ProgramNode::acceptVisitor(ABSASTVisitor* visitor) {
+  visitor->visitPre(this);
+  for (int i = 0; i < children.size(); i++) {
+    children[i]->acceptVisitor(visitor);
+  }
+  visitor->visitPost(this);
 }

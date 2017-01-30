@@ -4,5 +4,7 @@
 
 class LoopNode : public ABSNode {
 public:
-  LoopNode(std::weak_ptr<ABSNode> parent);
+  LoopNode();
+
+  void acceptVisitor(ABSASTVisitor* visitor);
 };

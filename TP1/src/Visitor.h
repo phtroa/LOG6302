@@ -7,6 +7,15 @@
 #include <clang/Lex/Lexer.h>
 #include <clang/Frontend/CompilerInstance.h>
 
+#include "ASTTree.h"
+#include "ClassNode.h"
+#include "CondNode.h"
+#include "JumpNode.h"
+#include "LoopNode.h"
+#include "MethodNode.h"
+#include "VarNode.h"
+#include "ProgramNode.h"
+
 /**
  * LOG6302 Cette classe est un exemple d'un visiteur récursif de clang. À l'intérieur, vous pouvez y trouver deux exemples
  * de visites, et un exemple de traverse.
@@ -14,7 +23,7 @@
 class Visitor : public clang::RecursiveASTVisitor<Visitor> {
 public:
 
-  Visitor(clang::ASTContext &context) : context_(context) {};
+  Visitor(clang::ASTContext &context);
 
   // Visites
   bool VisitCXXRecordDecl(clang::CXXRecordDecl *D);
@@ -41,9 +50,13 @@ public:
   bool TraverseForStmt(clang::ForStmt *S);
   bool TraverseWhileStmt(clang::WhileStmt *S);
 
+  std::shared_ptr<ASTTree> getAST();
+
 private:
   clang::ASTContext &context_;
-
+  bool inClass;
+  std::shared_ptr<ASTTree> myAst;
+  std::shared_ptr<ABSNode> currNode;
 
   std::string GetStatementString(clang::Stmt *S) {
     bool invalid;

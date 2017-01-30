@@ -8,11 +8,5 @@ class ProgramNode : public ABSNode {
 public:
   ProgramNode();
 
-  virtual void incrCond();
-  virtual void incrLoop();
-  virtual void incrJump();
-  virtual void incrVar();
-
-private:
-  ProgramNode(std::weak_ptr<ABSNode> parent);
+  void acceptVisitor(ABSASTVisitor* visitor);
 };

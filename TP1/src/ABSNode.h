@@ -4,17 +4,18 @@
 #include <memory>
 #include <string>
 
+class ABSASTVisitor;
+
 class ABSNode {
 public:
-  ABSNode(std::weak_ptr<ABSNode> parent) = 0;
-  void addchild(std::shared_ptr<ABSNode> child);
+  ABSNode();
+  ABSNode(std::shared_ptr<ABSNode> parent);
+  void addChild(std::shared_ptr<ABSNode>child);
+  void setParent(std::weak_ptr<ABSNode> parent);
 
-  virtual void incrCond();
-  virtual void incrLoop();
-  virtual void incrJump();
-  virtual void incrVar();
+  virtual void acceptVisitor(ABSASTVisitor* visitor) = 0;
 
-private:
+protected:
   std::vector<std::shared_ptr<ABSNode>> children;
   std::weak_ptr<ABSNode> parent;
 };

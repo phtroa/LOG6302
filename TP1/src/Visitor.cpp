@@ -1,5 +1,15 @@
 #include "Visitor.h"
 
+  Visitor::Visitor(clang::ASTContext &context) : context_(context) {
+    currNode = std::shared_ptr<ABSNode>(new ProgramNode());
+    myAst = std::shared_ptr<ASTTree>(new ASTTree());
+    myAst->setRoot(currNode);
+  }
+
+  std::shared_ptr<ASTTree> Visitor::getAST() {
+    return myAst;
+  }
+
 /**********************/
 /* C++ Class traverse */
 /**********************/
@@ -72,6 +82,8 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
 
   if (!D->isThisDeclarationADefinition()) {
     return true;
+  } else if (!inClass) {
+    return false;
   }
 
   clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
@@ -88,7 +100,13 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
     <<line_number
     <<")\n";
 
+  //Create a new node
+  std::shared_ptr<ABSNode> myNode(new MethodNode(D->getNameAsString()));
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseCXXMethodDecl(D);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin traverse de la méthode \""<<D->getNameAsString()<<"\"\n";
 
@@ -99,11 +117,23 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
 /* classe traverse    */
 /**********************/
 bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D) {
+  inClass = true;
   std::cout<<"[LOG6302] Traverse de la classe \""<<D->getNameAsString()<<"\"\n";
 
+  clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
+
+  std::string  file_path   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
+
+  std::shared_ptr<ABSNode> myNode(new ClassNode(D->getNameAsString(), file_path));
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseCXXRecordDecl(D);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin traverse de la classe \""<<D->getNameAsString()<<"\"\n";
+
+  inClass = false;
 
   return true;
 }
@@ -112,9 +142,18 @@ bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D) {
 /* variable traverse  */
 /**********************/
 bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse de la variable \""<<D->getNameAsString()<<"\"\n";
 
+  std::shared_ptr<ABSNode> myNode(new VarNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseVarDecl(D);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin traverse de la variable \""<<D->getNameAsString()<<"\"\n";
 
@@ -125,9 +164,18 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
 /* If traverse        */
 /**********************/
 bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
 
+  std::shared_ptr<ABSNode> myNode(new CondNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseIfStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
 
@@ -138,9 +186,18 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
 /* switch traverse    */
 /**********************/
 bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
 
+  std::shared_ptr<ABSNode> myNode(new CondNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseSwitchStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
 
@@ -151,9 +208,18 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
 /* break traverse     */
 /**********************/
 bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'un saut : \" break\"\n";
 
+  std::shared_ptr<ABSNode> myNode(new JumpNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseBreakStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'un saut : \" break\"\n";
 
@@ -164,9 +230,18 @@ bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
 /* continue traverse           */
 /**********************/
 bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'un saut : \" continue\"\n";
 
+  std::shared_ptr<ABSNode> myNode(new JumpNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseContinueStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'un saut : \" continue\"\n";
 
@@ -177,9 +252,18 @@ bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
 /* for traverse           */
 /**********************/
 bool Visitor::TraverseForStmt(clang::ForStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n";
 
+  std::shared_ptr<ABSNode> myNode(new LoopNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseForStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" for\"\n";
 
@@ -190,9 +274,18 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
 /* while traverse           */
 /**********************/
 bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
+  if (!inClass) {
+    return true;
+  }
+
   std::cout<<"[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n";
 
+  std::shared_ptr<ABSNode> myNode(new LoopNode());
+  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> parent(currNode);
+  currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseWhileStmt(S);
+  currNode = parent;
 
   std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" while\"\n";
 

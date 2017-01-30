@@ -1,21 +1,22 @@
 #include "MethodNode.h"
 
-MethodNode::MethodNode(std::weak_ptr<ABSNode> parent) : ABSNode(parent) {
+#include "ABSASTVisitor.h"
+
+MethodNode::MethodNode(const std::string& name) : ABSNode(), methodName(name) {
 }
 
-//Ces méthodes transmettent la modification à leur parent
-void MethodNode::incrCond() {
-  nbCond++;
+void MethodNode::setMethodName(const std::string& name) {
+  methodName = name;
 }
 
-void MethodNode::incrLoop() {
-  nbLoop++;
+std::string MethodNode::getMethodName() const {
+  return methodName;
 }
 
-void MethodNode::incrJump()  {
-  nbJump++;
-}
-
-void MethodNode::incrVar() {
-  nbVar++;
+void MethodNode::acceptVisitor(ABSASTVisitor* visitor) {
+  visitor->visitPre(this);
+  for (int i = 0; i < children.size(); i++) {
+    children[i]->acceptVisitor(visitor);
+  }
+  visitor->visitPost(this);
 }

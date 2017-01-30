@@ -4,5 +4,7 @@
 
 class CondNode : public ABSNode {
 public:
-  CondNode(std::weak_ptr<ABSNode> parent);
+  CondNode();
+
+  void acceptVisitor(ABSASTVisitor* visitor);
 };

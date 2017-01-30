@@ -4,5 +4,7 @@
 
 class VarNode : public ABSNode {
 public:
-    VarNode(std::weak_ptr<ABSNode> parent);
+    VarNode();
+
+    void acceptVisitor(ABSASTVisitor* visitor);
 };

@@ -4,15 +4,11 @@
 
 class MethodNode : public ABSNode {
 public:
-  MethodNode(std::weak_ptr<ABSNode> parent);
+  MethodNode(const std::string& name);
+  void setMethodName(const std::string& name);
+  std::string getMethodName() const;
 
-  virtual void incrCond();
-  virtual void incrLoop();
-  virtual void incrJump();
-  virtual void incrVar();
+  void acceptVisitor(ABSASTVisitor* visitor);
 private:
-  int nbCond;
-  int nbLoop;
-  int nbJump;
-  int nbVar;
+  std::string methodName;
 };

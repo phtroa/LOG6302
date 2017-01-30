@@ -1,5 +1,14 @@
-#include "JumpNode.h"
+#include "CondNode.h"
 
-CondNode::CondNode(std::weak_ptr<ABSNode> parent) : ABSNode(parent) {
-  incrCond(); //incrémente le nombre de conditions de la méthode
+#include "ABSASTVisitor.h"
+
+CondNode::CondNode() : ABSNode() {
+}
+
+void CondNode::acceptVisitor(ABSASTVisitor* visitor) {
+  visitor->visitPre(this);
+  for (int i = 0; i < children.size(); i++) {
+    children[i]->acceptVisitor(visitor);
+  }
+  visitor->visitPost(this);
 }

@@ -1,5 +1,14 @@
 #include "VarNode.h"
 
-VarNode::VarNode(std::weak_ptr<ABSNode> parent) : ABSNode(parent) {
-  incrVar(); //incrémente le nombre de boucles de la méthode
+#include "ABSASTVisitor.h"
+
+VarNode::VarNode() : ABSNode() {
+}
+
+void VarNode::acceptVisitor(ABSASTVisitor* visitor) {
+  visitor->visitPre(this);
+  for (int i = 0; i < children.size(); i++) {
+    children[i]->acceptVisitor(visitor);
+  }
+  visitor->visitPost(this);
 }

@@ -4,5 +4,7 @@
 
 class JumpNode : public ABSNode {
 public:
-  JumpNode(std::weak_ptr<ABSNode> parent);
+  JumpNode();
+
+  void acceptVisitor(ABSASTVisitor* visitor);
 };
