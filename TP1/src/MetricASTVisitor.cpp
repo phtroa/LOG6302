@@ -45,7 +45,6 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
 
  void MetricASTVisitor::visitPre(ProgramNode* node)
 {
-   std::cout << "Id,file's name, class' name, method's name,#cond,#loop,#Jump,#Variables" << std::endl;
 }
 
  void MetricASTVisitor::visitPre(VarNode* node)
@@ -76,6 +75,7 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
     std::cout << currId << "," << fileName << "," << className << ","
     << node->getMethodName() << "," << nbIf << "," << nbLoop << ","
     << nbJump << "," << nbVar << std::endl;
+    currId++;
 }
 
  void MetricASTVisitor::visitPost(ProgramNode* node)
