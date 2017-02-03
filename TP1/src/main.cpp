@@ -1,5 +1,8 @@
+#include <vector>
 #include <memory>
 #include <iostream>
+#include <iomanip>
+
 #include <clang/Tooling/Tooling.h>
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/ASTConsumer.h>
@@ -10,7 +13,7 @@
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
-static std::shared_ptr<ASTTree> myAst;
+static std::vector<std::shared_ptr<ASTTree>> myAsts;
 
 /******************************************************************************/
 /* MyASTConsumer                                                              */
@@ -21,7 +24,7 @@ class MyASTConsumer : public clang::ASTConsumer {
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
     Visitor visitor(Context);
     visitor.TraverseDecl(Context.getTranslationUnitDecl());
-    myAst = visitor.getAST();
+    myAsts.push_back(visitor.getAST());
   }
 };
 
@@ -96,9 +99,11 @@ int main(int argc, const char **argv) {
     ret = invocation.run();
   }
 
+  std::cout << "================================================================" << std::endl;
   //we compute metric
   MetricASTVisitor metricV;
-  myAst->acceptVisitor(&metricV);
+  for (int i = 0; i < myAsts.size(); i++)
+    myAsts[i]->acceptVisitor(&metricV);
 
   return ret;
 }

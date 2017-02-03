@@ -83,7 +83,7 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
   if (!D->isThisDeclarationADefinition()) {
     return true;
   } else if (!inClass) {
-    return false;
+    return true;
   }
 
   clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());

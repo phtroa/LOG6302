@@ -12,6 +12,7 @@
 MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
  nbJump(0), nbVar(0)
 {
+  std::cout << "id,nom Fichier,nom Classe, nom méthode, #cond, #boucle, #jump, #var" << std::endl;
 }
 
  void MetricASTVisitor::visitPre(ClassNode* node)
