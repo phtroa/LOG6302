@@ -2,8 +2,15 @@ class Foo {
 
 public:
     int x;
-    
+
     int bar() {
+        if (false)
+            return 42;
+        for (int i = 0; i < -1; i++);
+        return -1;
+    }
+
+    int top() {
         if (false)
             return 42;
         for (int i = 0; i < -1; i++);

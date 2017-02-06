@@ -3,6 +3,13 @@ class Foo {
 public:
     int x;
     
+    class ClassImbr {
+	    public:
+		    ClassImbr() : attr(0) {};
+	    private:
+		    int attr;
+    };
+
     int bar() {
         if (false)
             return 42;

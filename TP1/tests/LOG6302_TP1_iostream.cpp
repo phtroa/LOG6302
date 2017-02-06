@@ -1,8 +1,10 @@
+#include <iostream>
+
 class Foo {
 
 public:
     int x;
-    
+
     int bar() {
         if (false)
             return 42;

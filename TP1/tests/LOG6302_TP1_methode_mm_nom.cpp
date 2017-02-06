@@ -9,6 +9,12 @@ public:
         for (int i = 0; i < -1; i++);
         return -1;
     }
+    int bar(int j) {
+        if (false)
+            return 42;
+        for (int i = 0; i < j; i++);
+        return -1;
+    }
 
 };
 

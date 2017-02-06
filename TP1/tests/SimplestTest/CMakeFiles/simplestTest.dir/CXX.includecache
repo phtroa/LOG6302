@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/SimplestTest/Infirmier.cpp
+Infirmier.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/SimplestTest/Infirmier.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/SimplestTest/Infirmier.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/SimplestTest/Main.cpp
+Infirmier.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/SimplestTest/Infirmier.h
+
