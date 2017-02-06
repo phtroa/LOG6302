@@ -2,7 +2,15 @@
 
 #include "ABSASTVisitor.h"
 
-VarNode::VarNode() : ABSNode() {
+VarNode::VarNode(const std::string& name) : ABSNode(), varName(name) {
+}
+
+std::string VarNode::getVarName() const {
+  return varName;
+}
+
+void VarNode::setVarName(const std::string& name) {
+  varName = name;
 }
 
 void VarNode::acceptVisitor(ABSASTVisitor* visitor) {

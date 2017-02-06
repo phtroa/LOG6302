@@ -2,6 +2,7 @@
 
 #include "ABSNode.h"
 
+//Represents a class
 class ClassNode : public ABSNode {
 public:
   ClassNode(const std::string& name, const std::string& file);

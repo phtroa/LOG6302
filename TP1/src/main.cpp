@@ -11,6 +11,7 @@
 #include "Visitor.h"
 #include "MetaTree.h"
 #include "MetricASTVisitor.h"
+#include "PrettyPrintASTVisitor.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
@@ -24,6 +25,7 @@ class MyASTConsumer : public clang::ASTConsumer {
  public:
 
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
+    //We build an unique tree that is updated each time a new file is visited
     Visitor visitor(Context, myAst, infoTree);
     visitor.TraverseDecl(Context.getTranslationUnitDecl());
   }
@@ -110,6 +112,12 @@ int main(int argc, const char **argv) {
   //we compute metric
   MetricASTVisitor metricV;
   myAst->acceptVisitor(&metricV);
+
+
+  std::cout << "################################AST#############################" << std::endl;
+  //Print the tree (for debug purpose)
+  PrettyPrintASTVisitor printAST;
+  myAst->acceptVisitor(&printAST);
 
   return ret;
 }

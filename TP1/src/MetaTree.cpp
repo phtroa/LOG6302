@@ -1,9 +1,9 @@
 #include "MetaTree.h"
 
 bool MetaTree::isMethodIn(const std::string& className,
-   const std::string& methodName)
+   const std::string& methodId)
 {
-  std::string id = className + methodName;
+  std::string id = className + methodId;
 
   return isClassMethodIn.count(id) > 0;
 }
@@ -26,9 +26,9 @@ void MetaTree::addPtrToClass(const std::string& className,
 
 
 void MetaTree::addMethodIn(const std::string& className,
-  const std::string& methodName)
+  const std::string& methodId)
 {
-  std::string id = className + methodName;
+  std::string id = className + methodId;
 
   isClassMethodIn[id] = true;
 }

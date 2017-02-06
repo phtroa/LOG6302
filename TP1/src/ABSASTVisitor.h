@@ -11,6 +11,11 @@ class MethodNode;
 class ProgramNode;
 class VarNode;
 
+//Visitor pattern to visit a tree
+//all the *Pre method are called before going into
+//the children the *Post are called once all the chldren have been
+//encoutered
+
 class ABSASTVisitor {
 public:
   virtual void visitPre(ClassNode* node) = 0;

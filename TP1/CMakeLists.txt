@@ -17,6 +17,8 @@ set(SOURCE_FILES
     src/ProgramNode.h src/ProgramNode.cpp
     src/ABSASTVisitor.h
     src/MetricASTVisitor.h src/MetricASTVisitor.cpp
+    src/MetaTree.h src/MetaTree.cpp
+    src/PrettyPrintASTVisitor.h src/PrettyPrintASTVisitor.cpp
     )
 
 #FIND_PACKAGE(Clang REQUIRED)

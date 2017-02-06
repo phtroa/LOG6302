@@ -5,10 +5,10 @@
 
 #include "ABSASTVisitor.h"
 
-//Compute the metric on a program
-class MetricASTVisitor : public ABSASTVisitor {
+//Produces a dump of the tree while showing its structure
+class PrettyPrintASTVisitor : public ABSASTVisitor {
 public:
-  MetricASTVisitor();
+  PrettyPrintASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
     virtual void visitPre(JumpNode* node);
@@ -26,15 +26,6 @@ public:
     virtual void visitPost(VarNode* node);
 
 private:
-  int currId;
-  int nbIf;
-  int nbLoop;
-  int nbJump;
-  int nbVar;
-
-  std::string fileName;
-  std::string className;
-
-  std::string oldFileName;
-  std::string oldClassName;
+  void writeSpaces(int nb); //writes nb space on the screen
+  int spacePadding;
 };

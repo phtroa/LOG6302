@@ -6,6 +6,7 @@
 
 class ABSASTVisitor;
 
+//represent a node in our ast
 class ABSNode {
 public:
   ABSNode();

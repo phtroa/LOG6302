@@ -17,6 +17,11 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
 
  void MetricASTVisitor::visitPre(ClassNode* node)
 {
+  //saving names in case of class declaration inside another class
+  oldClassName = className;
+  oldFileName = fileName;
+
+  //settting current names
   className = node->getClassName();
   fileName = node->getFilePath();
 }
@@ -55,8 +60,8 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
 
  void MetricASTVisitor::visitPost(ClassNode* node)
 {
-  className = "Should never be seen, problem in visitor";
-  fileName = "Should never be seen, problem in visitor";
+  className = oldClassName;
+  fileName = oldFileName;
 }
 
  void MetricASTVisitor::visitPost(CondNode* node)
@@ -73,7 +78,7 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
 
  void MetricASTVisitor::visitPost(MethodNode* node)
 {
-    std::cout << currId << "," << fileName << "," << className << ","
+    std::cout << currId << "," << node->getFileName() << "," << className << ","
     << node->getMethodName() << "," << nbIf << "," << nbLoop << ","
     << nbJump << "," << nbVar << std::endl;
     currId++;
