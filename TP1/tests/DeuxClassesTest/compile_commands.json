@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/microTest.dir/Main.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Main.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Main.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/microTest.dir/Infirmier.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Infirmier.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Infirmier.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/microTest.dir/Specialite.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Specialite.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DeuxClassesTest/Specialite.cpp"
+}
+]

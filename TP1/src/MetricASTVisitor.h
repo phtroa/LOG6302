@@ -5,6 +5,7 @@
 
 #include "ABSASTVisitor.h"
 
+//Compute the metric on a program
 class MetricASTVisitor : public ABSASTVisitor {
 public:
   MetricASTVisitor();
@@ -33,4 +34,7 @@ private:
 
   std::string fileName;
   std::string className;
+
+  std::string oldFileName;
+  std::string oldClassName;
 };

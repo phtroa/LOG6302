@@ -4,6 +4,7 @@
 
 #include "ABSNode.h"
 
+//Symbolized te root of the tree
 class ProgramNode : public ABSNode {
 public:
   ProgramNode();

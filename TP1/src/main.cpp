@@ -9,11 +9,14 @@
 #include <clang/Frontend/CompilerInstance.h>
 
 #include "Visitor.h"
+#include "MetaTree.h"
 #include "MetricASTVisitor.h"
+#include "PrettyPrintASTVisitor.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
-static std::vector<std::shared_ptr<ASTTree>> myAsts;
+static std::shared_ptr<ASTTree> myAst;
+static std::shared_ptr<MetaTree> infoTree;
 
 /******************************************************************************/
 /* MyASTConsumer                                                              */
@@ -22,9 +25,9 @@ class MyASTConsumer : public clang::ASTConsumer {
  public:
 
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
-    Visitor visitor(Context);
+    //We build an unique tree that is updated each time a new file is visited
+    Visitor visitor(Context, myAst, infoTree);
     visitor.TraverseDecl(Context.getTranslationUnitDecl());
-    myAsts.push_back(visitor.getAST());
   }
 };
 
@@ -51,6 +54,12 @@ int main(int argc, const char **argv) {
   if (argc <= 1) {
     throw std::invalid_argument("No argument passed");
   }
+
+  //Initialisation de l'arbre
+  myAst = std::shared_ptr<ASTTree>(new ASTTree());
+  myAst->setRoot(std::shared_ptr<ABSNode>(new ProgramNode()));
+  //nitialisation des data
+  infoTree = std::shared_ptr<MetaTree>(new MetaTree());
 
   int ret = 0;
 
@@ -102,8 +111,13 @@ int main(int argc, const char **argv) {
   std::cout << "================================================================" << std::endl;
   //we compute metric
   MetricASTVisitor metricV;
-  for (int i = 0; i < myAsts.size(); i++)
-    myAsts[i]->acceptVisitor(&metricV);
+  myAst->acceptVisitor(&metricV);
+
+
+  std::cout << "################################AST#############################" << std::endl;
+  //Print the tree (for debug purpose)
+  PrettyPrintASTVisitor printAST;
+  myAst->acceptVisitor(&printAST);
 
   return ret;
 }

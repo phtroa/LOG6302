@@ -1,13 +1,19 @@
 #include "Visitor.h"
 
-  Visitor::Visitor(clang::ASTContext &context) : context_(context) {
-    currNode = std::shared_ptr<ABSNode>(new ProgramNode());
-    myAst = std::shared_ptr<ASTTree>(new ASTTree());
-    myAst->setRoot(currNode);
+  Visitor::Visitor(clang::ASTContext &context,
+     std::shared_ptr<ASTTree> ast,
+     std::shared_ptr<MetaTree> info)
+      : context_(context), myAst(ast), infoTree(info) {
+    currNode = ast->getRoot();
+    inMethod = false;
   }
 
   std::shared_ptr<ASTTree> Visitor::getAST() {
     return myAst;
+  }
+
+  void Visitor::setAST(std::shared_ptr<ASTTree> ast) {
+    myAst = ast;
   }
 
 /**********************/
@@ -79,36 +85,70 @@ bool Visitor::VisitWhileStmt(clang::WhileStmt *S) {
 /* C++ Method traverse */
 /***********************/
 bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
-
   if (!D->isThisDeclarationADefinition()) {
-    return true;
-  } else if (!inClass) {
     return true;
   }
 
+  inMethod = true;
+
   clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
 
-  std::string  file_path   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
-  unsigned int line_number = location.getSpellingLineNumber();
+  //In case something went wrong during the compilation
+  std::string  file_path("");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (context_.getSourceManager().getFileEntryForID(location.getFileID()) != nullptr) {
+    file_path   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
+    line_number = location.getSpellingLineNumber();
+    col_number = location.getSpellingColumnNumber();
+  }
+  else {
+    std::cerr << "got nullptr in CXXMethodDecl" << std::endl;
+  }
+  std::string methodName = D->getNameAsString();
+  std::string methodID(methodName);
+  //We create an id unique to the method
+  //c++ standard states that two method cannot have the
+  //same name and argument type
+  for (int i = 0; i < D->getNumParams(); i++) {
+    clang::QualType type = D->getParamDecl(i)->getOriginalType();
+    methodID = methodID + type.getAsString();
+  }
 
   std::cout
     <<"[LOG6302] Traverse de la méthode \""
-    <<D->getNameAsString()
+    << methodName
     <<"\" ("
     << file_path
     << ":"
-    <<line_number
+    << line_number
+    << ","
+    << col_number
+    << " id: "
+    << methodID
     <<")\n";
 
-  //Create a new node
-  std::shared_ptr<ABSNode> myNode(new MethodNode(D->getNameAsString()));
-  myAst->linkParentToChild(currNode, myNode);
-  std::shared_ptr<ABSNode> parent(currNode);
+
+  //We need to test if the method has already been visited
+  clang::FullSourceLoc locationClass = context_.getFullLoc(D->getParent()->getLocStart());
+  std::string className = D->getParent()->getNameAsString();
+  if (infoTree->isMethodIn(className, methodID)) {
+    inMethod = false;
+    return true; //has already been added to the AST
+  }
+  infoTree->addMethodIn(className, methodID);
+
+  std::shared_ptr<ABSNode> parent = infoTree->getPtrToClass(className);
+  std::shared_ptr<ABSNode> myNode(new MethodNode(methodName, file_path));
+  myAst->linkParentToChild(parent, myNode);
+  std::shared_ptr<ABSNode> localNode = currNode;
   currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseCXXMethodDecl(D);
-  currNode = parent;
+  currNode = localNode;
 
-  std::cout<<"[LOG6302] Fin traverse de la méthode \""<<D->getNameAsString()<<"\"\n";
+  std::cout<<"[LOG6302] Fin traverse de la méthode \""<< methodName <<"\"\n";
+
+  inMethod = false;
 
   return true;
 }
@@ -116,24 +156,37 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
 /**********************/
 /* classe traverse    */
 /**********************/
-bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D) {
-  inClass = true;
-  std::cout<<"[LOG6302] Traverse de la classe \""<<D->getNameAsString()<<"\"\n";
+bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D)
+{
+  std::string className(D->getNameAsString());
+  std::cout<<"[LOG6302] Traverse de la classe \""<< className <<"\"\n";
 
   clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
 
-  std::string  file_path   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
+  std::string  file_path("");
+  if (context_.getSourceManager().getFileEntryForID(location.getFileID()) != nullptr)
+    file_path = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
 
-  std::shared_ptr<ABSNode> myNode(new ClassNode(D->getNameAsString(), file_path));
-  myAst->linkParentToChild(currNode, myNode);
+  std::shared_ptr<ABSNode> myNode;
+
+  //Since We are building only one tree, we need to verify if we have already
+  //encounter the class
+  if (!infoTree->isClassIn(className)) {
+    myNode = std::shared_ptr<ABSNode>(new ClassNode(className, file_path));
+    //We add the class to the Tree information
+    infoTree->addPtrToClass(className, myNode);
+    myAst->linkParentToChild(currNode, myNode);
+  }
+  else {
+    myNode = infoTree->getPtrToClass(className);
+  }
+
   std::shared_ptr<ABSNode> parent(currNode);
   currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseCXXRecordDecl(D);
   currNode = parent;
 
-  std::cout<<"[LOG6302] Fin traverse de la classe \""<<D->getNameAsString()<<"\"\n";
-
-  inClass = false;
+  std::cout<<"[LOG6302] Fin traverse de la classe \""<< className <<"\"\n";
 
   return true;
 }
@@ -142,20 +195,21 @@ bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D) {
 /* variable traverse  */
 /**********************/
 bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse de la variable \""<<D->getNameAsString()<<"\"\n";
+  std::string varName = D->getNameAsString();
+  std::cout<<"[LOG6302] Traverse de la variable \""<< varName <<"\"\n";
 
-  std::shared_ptr<ABSNode> myNode(new VarNode());
+  std::shared_ptr<ABSNode> myNode(new VarNode(varName));
   myAst->linkParentToChild(currNode, myNode);
   std::shared_ptr<ABSNode> parent(currNode);
   currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseVarDecl(D);
   currNode = parent;
 
-  std::cout<<"[LOG6302] Fin traverse de la variable \""<<D->getNameAsString()<<"\"\n";
+  std::cout<<"[LOG6302] Fin traverse de la variable \""<< varName <<"\"\n";
 
   return true;
 }
@@ -164,7 +218,7 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
 /* If traverse        */
 /**********************/
 bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
@@ -186,7 +240,7 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
 /* switch traverse    */
 /**********************/
 bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
@@ -208,7 +262,7 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
 /* break traverse     */
 /**********************/
 bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
@@ -230,7 +284,7 @@ bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
 /* continue traverse           */
 /**********************/
 bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
@@ -252,7 +306,7 @@ bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
 /* for traverse           */
 /**********************/
 bool Visitor::TraverseForStmt(clang::ForStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 
@@ -274,7 +328,7 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
 /* while traverse           */
 /**********************/
 bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
-  if (!inClass) {
+  if (!inMethod) {
     return true;
   }
 

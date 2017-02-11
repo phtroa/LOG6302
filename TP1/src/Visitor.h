@@ -2,19 +2,21 @@
 #define LOG6302_VISITOR_H
 
 #include <iostream>
+
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/AST/ASTContext.h>
-#include <clang/Lex/Lexer.h>
 #include <clang/Frontend/CompilerInstance.h>
+#include <clang/Lex/Lexer.h>
 
 #include "ASTTree.h"
 #include "ClassNode.h"
 #include "CondNode.h"
 #include "JumpNode.h"
 #include "LoopNode.h"
+#include "MetaTree.h"
 #include "MethodNode.h"
-#include "VarNode.h"
 #include "ProgramNode.h"
+#include "VarNode.h"
 
 /**
  * LOG6302 Cette classe est un exemple d'un visiteur récursif de clang. À l'intérieur, vous pouvez y trouver deux exemples
@@ -23,7 +25,9 @@
 class Visitor : public clang::RecursiveASTVisitor<Visitor> {
 public:
 
-  Visitor(clang::ASTContext &context);
+  Visitor(clang::ASTContext &context,
+     std::shared_ptr<ASTTree> ast,
+     std::shared_ptr<MetaTree> info);
 
   // Visites
   bool VisitCXXRecordDecl(clang::CXXRecordDecl *D);
@@ -51,11 +55,13 @@ public:
   bool TraverseWhileStmt(clang::WhileStmt *S);
 
   std::shared_ptr<ASTTree> getAST();
+  void setAST(std::shared_ptr<ASTTree> ast);
 
 private:
   clang::ASTContext &context_;
-  bool inClass;
+  bool inMethod;
   std::shared_ptr<ASTTree> myAst;
+  std::shared_ptr<MetaTree> infoTree;
   std::shared_ptr<ABSNode> currNode;
 
   std::string GetStatementString(clang::Stmt *S) {
