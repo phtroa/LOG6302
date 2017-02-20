@@ -5,6 +5,7 @@
 #include "JumpNode.h"
 #include "LoopNode.h"
 #include "MethodNode.h"
+#include "NamespaceNode.h"
 #include "ProgramNode.h"
 #include "VarNode.h"
 
@@ -49,6 +50,10 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
   nbVar = 0;
 }
 
+ void MetricASTVisitor::visitPre(NamespaceNode* node)
+{
+}
+
  void MetricASTVisitor::visitPre(ProgramNode* node)
 {
 }
@@ -56,6 +61,10 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
  void MetricASTVisitor::visitPre(VarNode* node)
 {
   nbVar++;
+}
+
+ void MetricASTVisitor::visitPre(AttributeNode* node)
+{
 }
 
  void MetricASTVisitor::visitPost(ClassNode* node)
@@ -84,10 +93,18 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
     currId++;
 }
 
+ void MetricASTVisitor::visitPost(NamespaceNode* node)
+{
+}
+
  void MetricASTVisitor::visitPost(ProgramNode* node)
 {
 }
 
  void MetricASTVisitor::visitPost(VarNode* node)
+{
+}
+
+ void MetricASTVisitor::visitPost(AttributeNode* node)
 {
 }

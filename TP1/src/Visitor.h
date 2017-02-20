@@ -2,6 +2,7 @@
 #define LOG6302_VISITOR_H
 
 #include <iostream>
+#include <string>
 
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/AST/ASTContext.h>
@@ -9,14 +10,18 @@
 #include <clang/Lex/Lexer.h>
 
 #include "ASTTree.h"
+#include "AttributeNode.h"
 #include "ClassNode.h"
 #include "CondNode.h"
 #include "JumpNode.h"
 #include "LoopNode.h"
 #include "MetaTree.h"
 #include "MethodNode.h"
+#include "NamespaceNode.h"
 #include "ProgramNode.h"
 #include "VarNode.h"
+
+#include "InfoType.h"
 
 /**
  * LOG6302 Cette classe est un exemple d'un visiteur récursif de clang. À l'intérieur, vous pouvez y trouver deux exemples
@@ -28,24 +33,10 @@ public:
   Visitor(clang::ASTContext &context,
      std::shared_ptr<ASTTree> ast,
      std::shared_ptr<MetaTree> info);
-
-  // Visites
-  bool VisitCXXRecordDecl(clang::CXXRecordDecl *D);
-  //variables
-  bool VisitVarDecl(clang::VarDecl *VD);
-  //conditions
-  bool VisitIfStmt(clang::IfStmt *S);
-  bool VisitSwitchStmt(clang::SwitchStmt *S);
-  //Sauts
-  bool VisitBreakStmt(clang::BreakStmt *S);
-  bool VisitContinueStmt(clang::ContinueStmt *S);
-  //boucles
-  bool VisitForStmt(clang::ForStmt *S);
-  bool VisitWhileStmt(clang::WhileStmt *S);
-
   // Traverses
   bool TraverseCXXMethodDecl(clang::CXXMethodDecl *D);
   bool TraverseCXXRecordDecl(clang::CXXRecordDecl *D);
+  bool TraverseFieldDecl(clang::FieldDecl *D);
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);
@@ -53,6 +44,7 @@ public:
   bool TraverseContinueStmt(clang::ContinueStmt *S);
   bool TraverseForStmt(clang::ForStmt *S);
   bool TraverseWhileStmt(clang::WhileStmt *S);
+  bool TraverseNamespaceDecl(clang::NamespaceDecl *D);
 
   std::shared_ptr<ASTTree> getAST();
   void setAST(std::shared_ptr<ASTTree> ast);
@@ -63,6 +55,8 @@ private:
   std::shared_ptr<ASTTree> myAst;
   std::shared_ptr<MetaTree> infoTree;
   std::shared_ptr<ABSNode> currNode;
+
+  bool isHeaderSystem(clang::Decl* D) const;
 
   std::string GetStatementString(clang::Stmt *S) {
     bool invalid;
@@ -94,7 +88,9 @@ private:
     }
     data.swap(buffer);
   }
+  InfoType extractedFinalType(const clang::QualType& type);
+  std::string computeID(const clang::DeclContext* D) const;
+  void completeBaseList(clang::CXXRecordDecl *D, std::shared_ptr<ABSNode> classNode);
 };
-
 
 #endif //LOG6302_VISITOR_H

@@ -12,6 +12,7 @@
 #include "MetaTree.h"
 #include "MetricASTVisitor.h"
 #include "PrettyPrintASTVisitor.h"
+#include "UMLASTVisitor.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
@@ -118,6 +119,12 @@ int main(int argc, const char **argv) {
   //Print the tree (for debug purpose)
   PrettyPrintASTVisitor printAST;
   myAst->acceptVisitor(&printAST);
+
+
+  std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
+  //Print the dot file
+  UMLASTVisitor printUML;
+  myAst->acceptVisitor(&printUML);
 
   return ret;
 }

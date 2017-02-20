@@ -13,17 +13,28 @@ set(SOURCE_FILES
     src/JumpNode.h src/JumpNode.cpp
     src/LoopNode.h src/LoopNode.cpp
     src/MethodNode.h src/MethodNode.cpp
+    src/NamespaceNode.h src/NamespaceNode.cpp
     src/VarNode.h src/VarNode.cpp
+    src/AttributeNode.h src/AttributeNode.cpp
     src/ProgramNode.h src/ProgramNode.cpp
     src/ABSASTVisitor.h
     src/MetricASTVisitor.h src/MetricASTVisitor.cpp
     src/MetaTree.h src/MetaTree.cpp
     src/PrettyPrintASTVisitor.h src/PrettyPrintASTVisitor.cpp
+    src/UMLClass.h src/UMLClass.cpp
+    src/UMLMethod.h src/UMLMethod.cpp
+    src/UMLAttribute.h src/UMLAttribute.cpp
+    src/UMLBuilder.h src/UMLBuilder.cpp
+    src/UMLASTVisitor.h src/UMLASTVisitor.cpp
+    src/ABSUMLRelation.h src/ABSUMLRelation.cpp
+    src/CompositionRel.h src/CompositionRel.cpp
+    src/InheritanceRel.h src/InheritanceRel.cpp
+    src/InfoType.h src/InfoType.cpp
     )
 
 #FIND_PACKAGE(Clang REQUIRED)
 
-set(LLVM_PATH /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-Ubuntu-13.04-x86_64-linux-gnu/clang+llvm-3.3-Ubuntu-13.04-x86_64-linux-gnu CACHE PATH "Path to LLVM installation")
+set(LLVM_PATH /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/ CACHE PATH "Path to LLVM installation")
 include_directories(${LLVM_PATH}/include)
 link_directories(${LLVM_PATH}/lib)
 add_definitions(-DLLVM_PATH=\"${LLVM_PATH}\")

@@ -11,8 +11,9 @@ class ABSNode {
 public:
   ABSNode();
   ABSNode(std::shared_ptr<ABSNode> parent);
-  void addChild(std::shared_ptr<ABSNode>child);
+  void addChild(std::shared_ptr<ABSNode> child);
   void setParent(std::weak_ptr<ABSNode> parent);
+  std::shared_ptr<ABSNode> getParent() const;
 
   virtual void acceptVisitor(ABSASTVisitor* visitor) = 0;
 

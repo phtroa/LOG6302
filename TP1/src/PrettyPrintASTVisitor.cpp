@@ -7,8 +7,10 @@
 #include "JumpNode.h"
 #include "LoopNode.h"
 #include "MethodNode.h"
+#include "NamespaceNode.h"
 #include "ProgramNode.h"
 #include "VarNode.h"
+#include "AttributeNode.h"
 
 
 PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
@@ -68,6 +70,14 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
   spacePadding++;
 }
 
+ void PrettyPrintASTVisitor::visitPre(NamespaceNode* node)
+{
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "NamespaceNode : " << node->getName() << std::endl;
+  spacePadding++;
+}
+
  void PrettyPrintASTVisitor::visitPre(ProgramNode* node)
 {
 
@@ -83,6 +93,15 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "VarNode : " << node->getVarName() << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(AttributeNode* node)
+{
+
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "AttNode : " << node->getAttName() << node->getType().getType() << std::endl;
   spacePadding++;
 }
 
@@ -116,6 +135,12 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
   spacePadding--;
 }
 
+ void PrettyPrintASTVisitor::visitPost(NamespaceNode* node)
+{
+
+  spacePadding--;
+}
+
  void PrettyPrintASTVisitor::visitPost(ProgramNode* node)
 {
 
@@ -123,6 +148,12 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
 }
 
  void PrettyPrintASTVisitor::visitPost(VarNode* node)
+{
+
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(AttributeNode* node)
 {
 
   spacePadding--;

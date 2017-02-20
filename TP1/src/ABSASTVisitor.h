@@ -3,11 +3,13 @@
 #include <memory>
 
 class ABSNode;
+class AttributeNode;
 class ClassNode;
 class CondNode;
 class JumpNode;
 class LoopNode;
 class MethodNode;
+class NamespaceNode;
 class ProgramNode;
 class VarNode;
 
@@ -25,6 +27,8 @@ public:
   virtual void visitPre(MethodNode* node) = 0;
   virtual void visitPre(ProgramNode* node) = 0;
   virtual void visitPre(VarNode* node) = 0;
+  virtual void visitPre(AttributeNode* node) = 0;
+  virtual void visitPre(NamespaceNode* node) = 0;
 
   virtual void visitPost(ClassNode* node) = 0;
   virtual void visitPost(CondNode* node) = 0;
@@ -33,4 +37,6 @@ public:
   virtual void visitPost(MethodNode* node) = 0;
   virtual void visitPost(ProgramNode* node) = 0;
   virtual void visitPost(VarNode* node) = 0;
+  virtual void visitPost(AttributeNode* node) = 0;
+  virtual void visitPost(NamespaceNode* node) = 0;
 };

@@ -16,6 +16,8 @@ public:
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(ProgramNode* node);
     virtual void visitPre(VarNode* node);
+    virtual void visitPre(AttributeNode* node);
+    virtual void visitPre(NamespaceNode* node);
 
     virtual void visitPost(ClassNode* node);
     virtual void visitPost(CondNode* node);
@@ -24,6 +26,8 @@ public:
     virtual void visitPost(MethodNode* node);
     virtual void visitPost(ProgramNode* node);
     virtual void visitPost(VarNode* node);
+    virtual void visitPost(AttributeNode* node);
+    virtual void visitPost(NamespaceNode* node);
 
 private:
   int currId;

@@ -2,24 +2,58 @@
 
 #include "ABSASTVisitor.h"
 
-MethodNode::MethodNode(const std::string& myClassName, const std::string& myfName)
-: ABSNode(), methodName(myClassName), fileName(myfName) {
+MethodNode::MethodNode(const std::string& myClassName, const std::string& myfName, int visibility)
+: ABSNode(), methodName(myClassName), fileName(myfName), methodVis(visibility)
+{
 }
 
-void MethodNode::setMethodName(const std::string& name) {
+void MethodNode::setMethodName(const std::string& name)
+{
   methodName = name;
 }
 
-std::string MethodNode::getMethodName() const {
+std::string MethodNode::getMethodName() const
+{
   return methodName;
 }
 
-void MethodNode::setFileName(const std::string& name) {
+void MethodNode::setFileName(const std::string& name)
+{
   fileName = name;
 }
 
-std::string MethodNode::getFileName() const {
+std::string MethodNode::getFileName() const
+{
   return fileName;
+}
+
+void MethodNode::setReturnType(const std::string& type)
+{
+  returnType = type;
+}
+
+std::string MethodNode::getReturnType() const
+{
+  return returnType;
+}
+
+void MethodNode::addArgType(const std::string& argType)
+{
+  argsTypes.push_back(argType);
+}
+
+std::vector<std::string>::iterator MethodNode::argsTypesBegin()
+{
+  return argsTypes.begin();
+}
+
+std::vector<std::string>::iterator MethodNode::argsTypesEnd()
+{
+  return argsTypes.end();
+}
+
+int MethodNode::getVisibility() const {
+  return methodVis;
 }
 
 void MethodNode::acceptVisitor(ABSASTVisitor* visitor) {
