@@ -6,6 +6,8 @@ class MethodNode : public ABSNode {
 public:
   MethodNode(const std::string& myClassName, const std::string& myFname, int visibility = 0);
 
+  ~MethodNode();
+
   void setMethodName(const std::string& name);
   std::string getMethodName() const;
 
@@ -23,6 +25,7 @@ public:
   int getVisibility() const;
 
   void acceptVisitor(ABSASTVisitor* visitor);
+  
 private:
   std::string methodName;
   std::string fileName;

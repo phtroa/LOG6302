@@ -13,13 +13,21 @@
 #include "AttributeNode.h"
 #include "ClassNode.h"
 #include "CondNode.h"
+#include "BlockNode.h"
+#include "IfNode.h"
 #include "JumpNode.h"
+#include "BreakNode.h"
+#include "ContinueNode.h"
 #include "LoopNode.h"
+#include "ForNode.h"
+#include "WhileNode.h"
 #include "MetaTree.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
 #include "VarNode.h"
+#include "ReturnNode.h"
+#include "SwitchNode.h"
 
 #include "InfoType.h"
 
@@ -39,11 +47,14 @@ public:
   bool TraverseFieldDecl(clang::FieldDecl *D);
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
+  bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);
+  bool TraverseCaseStmt(clang::CaseStmt *S);
   bool TraverseBreakStmt(clang::BreakStmt *S);
   bool TraverseContinueStmt(clang::ContinueStmt *S);
   bool TraverseForStmt(clang::ForStmt *S);
   bool TraverseWhileStmt(clang::WhileStmt *S);
+  bool TraverseReturnStmt(clang::ReturnStmt *S);
   bool TraverseNamespaceDecl(clang::NamespaceDecl *D);
 
   std::shared_ptr<ASTTree> getAST();
@@ -52,11 +63,13 @@ public:
 private:
   clang::ASTContext &context_;
   bool inMethod;
+  int ifDepth;
   std::shared_ptr<ASTTree> myAst;
   std::shared_ptr<MetaTree> infoTree;
   std::shared_ptr<ABSNode> currNode;
 
   bool isHeaderSystem(clang::Decl* D) const;
+  bool isInIf() const;
 
   std::string GetStatementString(clang::Stmt *S) {
     bool invalid;

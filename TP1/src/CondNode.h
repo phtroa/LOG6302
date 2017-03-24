@@ -5,6 +5,7 @@
 class CondNode : public ABSNode {
 public:
   CondNode();
+  ~CondNode();
 
-  void acceptVisitor(ABSASTVisitor* visitor);
+  virtual void acceptVisitor(ABSASTVisitor* visitor);
 };

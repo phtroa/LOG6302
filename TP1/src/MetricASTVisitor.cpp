@@ -7,6 +7,8 @@
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
+#include "ReturnNode.h"
+#include "BlockNode.h"
 #include "VarNode.h"
 
 
@@ -14,6 +16,10 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
  nbJump(0), nbVar(0)
 {
   std::cout << "id,nom Fichier,nom Classe, nom méthode, #cond, #boucle, #jump, #var" << std::endl;
+}
+
+MetricASTVisitor::~MetricASTVisitor()
+{
 }
 
  void MetricASTVisitor::visitPre(ClassNode* node)
@@ -50,21 +56,9 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
   nbVar = 0;
 }
 
- void MetricASTVisitor::visitPre(NamespaceNode* node)
-{
-}
-
- void MetricASTVisitor::visitPre(ProgramNode* node)
-{
-}
-
  void MetricASTVisitor::visitPre(VarNode* node)
 {
   nbVar++;
-}
-
- void MetricASTVisitor::visitPre(AttributeNode* node)
-{
 }
 
  void MetricASTVisitor::visitPost(ClassNode* node)
@@ -73,38 +67,10 @@ MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
   fileName = oldFileName;
 }
 
- void MetricASTVisitor::visitPost(CondNode* node)
-{
-}
-
- void MetricASTVisitor::visitPost(JumpNode* node)
-{
-}
-
- void MetricASTVisitor::visitPost(LoopNode* node)
-{
-}
-
  void MetricASTVisitor::visitPost(MethodNode* node)
 {
     std::cout << currId << "," << node->getFileName() << "," << className << ","
     << node->getMethodName() << "," << nbIf << "," << nbLoop << ","
     << nbJump << "," << nbVar << std::endl;
     currId++;
-}
-
- void MetricASTVisitor::visitPost(NamespaceNode* node)
-{
-}
-
- void MetricASTVisitor::visitPost(ProgramNode* node)
-{
-}
-
- void MetricASTVisitor::visitPost(VarNode* node)
-{
-}
-
- void MetricASTVisitor::visitPost(AttributeNode* node)
-{
 }

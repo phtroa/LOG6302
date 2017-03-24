@@ -5,6 +5,7 @@
 class JumpNode : public ABSNode {
 public:
   JumpNode();
+  ~JumpNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);
 };

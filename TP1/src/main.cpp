@@ -13,6 +13,8 @@
 #include "MetricASTVisitor.h"
 #include "PrettyPrintASTVisitor.h"
 #include "UMLASTVisitor.h"
+#include "CFGVisitor.h"
+#include "Dominator.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
@@ -125,6 +127,19 @@ int main(int argc, const char **argv) {
   //Print the dot file
   UMLASTVisitor printUML;
   myAst->acceptVisitor(&printUML);
+
+
+  std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+  //Print the dot file
+  CFGVisitor printCFG;
+  myAst->acceptVisitor(&printCFG);
+
+  std::cout << "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" << std::endl;
+  std::vector<CFG> graph = printCFG.getGraph();
+  Dominator dom;
+  for (auto it = graph.begin(); it != graph.end(); it++) {
+    std::cout << *(dom.compute(&(*it))) << std::endl;
+  }
 
   return ret;
 }

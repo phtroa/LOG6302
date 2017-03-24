@@ -7,6 +7,10 @@ MethodNode::MethodNode(const std::string& myClassName, const std::string& myfNam
 {
 }
 
+MethodNode::~MethodNode()
+{
+}
+
 void MethodNode::setMethodName(const std::string& name)
 {
   methodName = name;
@@ -56,10 +60,12 @@ int MethodNode::getVisibility() const {
   return methodVis;
 }
 
-void MethodNode::acceptVisitor(ABSASTVisitor* visitor) {
+void MethodNode::acceptVisitor(ABSASTVisitor* visitor)
+{
   visitor->visitPre(this);
   for (int i = 0; i < children.size(); i++) {
     children[i]->acceptVisitor(visitor);
+    visitor->visitBetween(this);
   }
   visitor->visitPost(this);
 }

@@ -1,8 +1,13 @@
 #include "ABSNode.h"
+#include "ABSASTVisitor.h"
 
-  ABSNode::ABSNode()
-  {
-  }
+ABSNode::ABSNode()
+{
+}
+
+ABSNode::~ABSNode()
+{
+}
 
 void ABSNode::addChild(std::shared_ptr<ABSNode> child)
 {
@@ -18,4 +23,17 @@ void ABSNode::setParent(std::weak_ptr<ABSNode> parent)
 std::shared_ptr<ABSNode> ABSNode::getParent() const
 {
   return parent.lock();
+}
+
+void ABSNode::acceptVisitor(ABSASTVisitor* visitor)
+{
+  visitor->visitPre(this);
+  for (auto it = children.begin(); it != children.end(); it++) {
+    (*it)->acceptVisitor(visitor);
+  }
+  visitor->visitPost(this);
+}
+
+int ABSNode::getNbChildren() const {
+  return children.size();
 }

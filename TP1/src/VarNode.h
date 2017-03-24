@@ -7,6 +7,7 @@
 class VarNode : public ABSNode {
 public:
     VarNode(const std::string& name);
+    ~VarNode();
 
     std::string getVarName() const;
     void setVarName(const std::string& name);

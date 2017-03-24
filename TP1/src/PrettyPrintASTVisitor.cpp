@@ -9,11 +9,17 @@
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
+#include "ReturnNode.h"
+#include "BlockNode.h"
 #include "VarNode.h"
 #include "AttributeNode.h"
 
 
 PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
+{
+}
+
+PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 {
 }
 
@@ -105,6 +111,24 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
   spacePadding++;
 }
 
+ void PrettyPrintASTVisitor::visitPre(ReturnNode* node)
+{
+
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "ReturnNode" << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(BlockNode* node)
+{
+
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "BlockNode" << std::endl;
+  spacePadding++;
+}
+
  void PrettyPrintASTVisitor::visitPost(ClassNode* node)
 {
 
@@ -155,6 +179,15 @@ PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
 
  void PrettyPrintASTVisitor::visitPost(AttributeNode* node)
 {
+  spacePadding--;
+}
 
+ void PrettyPrintASTVisitor::visitPost(ReturnNode* node)
+{
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(BlockNode* node)
+{
   spacePadding--;
 }

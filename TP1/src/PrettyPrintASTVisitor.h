@@ -9,6 +9,7 @@
 class PrettyPrintASTVisitor : public ABSASTVisitor {
 public:
   PrettyPrintASTVisitor();
+  ~PrettyPrintASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
     virtual void visitPre(JumpNode* node);
@@ -18,6 +19,8 @@ public:
     virtual void visitPre(VarNode* node);
     virtual void visitPre(AttributeNode* node);
     virtual void visitPre(NamespaceNode* node);
+    virtual void visitPre(ReturnNode* node);
+    virtual void visitPre(BlockNode* node);
 
     virtual void visitPost(ClassNode* node);
     virtual void visitPost(CondNode* node);
@@ -28,6 +31,8 @@ public:
     virtual void visitPost(VarNode* node);
     virtual void visitPost(AttributeNode* node);
     virtual void visitPost(NamespaceNode* node);
+    virtual void visitPost(ReturnNode* node);
+    virtual void visitPost(BlockNode* node);
 
 private:
   void writeSpaces(int nb); //writes nb space on the screen

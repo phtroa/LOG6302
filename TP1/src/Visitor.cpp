@@ -3,7 +3,7 @@
   Visitor::Visitor(clang::ASTContext &context,
      std::shared_ptr<ASTTree> ast,
      std::shared_ptr<MetaTree> info)
-      : context_(context), myAst(ast), infoTree(info), inMethod(false) {
+      : context_(context), myAst(ast), infoTree(info), inMethod(false), ifDepth(0) {
     currNode = ast->getRoot();
   }
 
@@ -81,7 +81,6 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
   clang::FullSourceLoc locationClass = context_.getFullLoc(D->getParent()->getLocStart());
   std::string className = D->getParent()->getNameAsString();
   std::string classID = computeID(D->getParent()) + className;
-  //classID = className;
   if (infoTree->isMethodIn(classID, methodID)) {
     inMethod = false;
     return true; //has already been added to the AST
@@ -249,7 +248,6 @@ bool Visitor::TraverseFieldDecl(clang::FieldDecl *D) {
   std::string attName = D->getNameAsString();
   std::string className = D->getParent()->getNameAsString();
   std::string classID = computeID(D->getParent()) + className;
-  //classID = className;
   if (attName.empty()) {
     std::cerr << "Attribut with empty name" << std::endl;
   }
@@ -321,6 +319,9 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
   return true;
 }
 
+bool Visitor::isInIf() const {
+  return ifDepth > 0;
+}
 /**********************/
 /* If traverse        */
 /**********************/
@@ -331,11 +332,13 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
 
-  std::shared_ptr<ABSNode> myNode(new CondNode());
+  std::shared_ptr<ABSNode> myNode(new IfNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
+  ifDepth++;
   clang::RecursiveASTVisitor<Visitor>::TraverseIfStmt(S);
+  ifDepth--;
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
@@ -353,7 +356,7 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
 
-  std::shared_ptr<ABSNode> myNode(new CondNode());
+  std::shared_ptr<ABSNode> myNode(new SwitchNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -361,6 +364,28 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
+
+  return true;
+}
+
+/**********************/
+/* switch traverse    */
+/**********************/
+bool Visitor::TraverseCaseStmt (clang::CaseStmt  *S) {
+  if (!inMethod) {
+    return true;
+  }
+
+  std::cout<<"[LOG6302] Traverse d'un case" << std::endl;
+
+  std::shared_ptr<ABSNode> myNode(new BlockNode());
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseCaseStmt(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'un case" << std::endl;
 
   return true;
 }
@@ -375,7 +400,7 @@ bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'un saut : \" break\"\n";
 
-  std::shared_ptr<ABSNode> myNode(new JumpNode());
+  std::shared_ptr<ABSNode> myNode(new BreakNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -397,7 +422,7 @@ bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'un saut : \" continue\"\n";
 
-  std::shared_ptr<ABSNode> myNode(new JumpNode());
+  std::shared_ptr<ABSNode> myNode(new ContinueNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -419,7 +444,7 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n";
 
-  std::shared_ptr<ABSNode> myNode(new LoopNode());
+  std::shared_ptr<ABSNode> myNode(new ForNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -441,7 +466,7 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
 
   std::cout<<"[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n";
 
-  std::shared_ptr<ABSNode> myNode(new LoopNode());
+  std::shared_ptr<ABSNode> myNode(new WhileNode());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -449,6 +474,50 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" while\"\n";
+
+  return true;
+}
+
+/**********************/
+/* return traverse           */
+/**********************/
+bool Visitor::TraverseReturnStmt(clang::ReturnStmt *S) {
+  if (!inMethod) {
+    return true;
+  }
+
+  std::cout<<"[LOG6302] Traverse d'un return" << std::endl;
+
+  std::shared_ptr<ABSNode> myNode(new ReturnNode());
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseReturnStmt(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'un return" << std::endl;
+
+  return true;
+}
+
+/**********************/
+/* ifBlock traverse           */
+/**********************/
+bool Visitor::TraverseCompoundStmt(clang::CompoundStmt *S) {
+  if (!isInIf()) {
+    return clang::RecursiveASTVisitor<Visitor>::TraverseCompoundStmt(S);
+  }
+
+  std::cout<<"[LOG6302] Traverse d'un block condition" << std::endl;
+
+  std::shared_ptr<ABSNode> myNode(new BlockNode());
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseCompoundStmt(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'un  block condition" << std::endl;
 
   return true;
 }

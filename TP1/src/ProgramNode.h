@@ -8,6 +8,7 @@
 class ProgramNode : public ABSNode {
 public:
   ProgramNode();
+  ~ProgramNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);
 };

@@ -2,13 +2,21 @@
 
 #include "ABSASTVisitor.h"
 
+#include <iostream>
+
 CondNode::CondNode() : ABSNode() {
 }
 
-void CondNode::acceptVisitor(ABSASTVisitor* visitor) {
+CondNode::~CondNode()
+{
+}
+
+void CondNode::acceptVisitor(ABSASTVisitor* visitor)
+{
   visitor->visitPre(this);
   for (int i = 0; i < children.size(); i++) {
     children[i]->acceptVisitor(visitor);
+    visitor->visitBetween(this);
   }
   visitor->visitPost(this);
 }
