@@ -11,6 +11,7 @@
 
 #include "ASTTree.h"
 #include "AttributeNode.h"
+#include "AssignNode.h"
 #include "ClassNode.h"
 #include "CondNode.h"
 #include "BlockNode.h"
@@ -47,6 +48,8 @@ public:
   bool TraverseFieldDecl(clang::FieldDecl *D);
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
+  bool TraverseBinaryOperator(clang::BinaryOperator *S);
+  //bool TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S);
   bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);
   bool TraverseCaseStmt(clang::CaseStmt *S);
@@ -104,6 +107,9 @@ private:
   InfoType extractedFinalType(const clang::QualType& type);
   std::string computeID(const clang::DeclContext* D) const;
   void completeBaseList(clang::CXXRecordDecl *D, std::shared_ptr<ABSNode> classNode);
+  bool extractLocationInfo(const clang::FullSourceLoc& location,
+                          std::string & filname, unsigned int & line_number,
+                          unsigned int & col_number);
 };
 
 #endif //LOG6302_VISITOR_H

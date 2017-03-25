@@ -41,7 +41,7 @@ public:
     virtual void visitPost(BlockNode* node);
     virtual void visitPost(ReturnNode* node);
 
-    std::vector<CFG> getGraph();
+    std::vector<CFG>& getGraph();
 private:
   int globalID;
   int localID;

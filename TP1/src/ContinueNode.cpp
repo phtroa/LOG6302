@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-ContinueNode::ContinueNode() : JumpNode() {
+ContinueNode::ContinueNode(int line) : JumpNode(line) {
 }
 
 ContinueNode::~ContinueNode() {

@@ -4,7 +4,7 @@
 
 class BlockNode : public ABSNode {
 public:
-  BlockNode();
+  BlockNode(int line);
   ~BlockNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

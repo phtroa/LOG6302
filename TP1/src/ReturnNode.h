@@ -4,7 +4,7 @@
 
 class ReturnNode : public ABSNode {
 public:
-  ReturnNode();
+  ReturnNode(int line);
   ~ReturnNode();
   void acceptVisitor(ABSASTVisitor* visitor);
 };

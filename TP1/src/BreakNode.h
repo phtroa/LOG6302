@@ -4,7 +4,7 @@
 
 class BreakNode : public JumpNode {
 public:
-  BreakNode();
+  BreakNode(int line);
   ~BreakNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

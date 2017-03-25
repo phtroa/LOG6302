@@ -1,7 +1,7 @@
 #include "ABSNode.h"
 #include "ABSASTVisitor.h"
 
-ABSNode::ABSNode()
+ABSNode::ABSNode(int line) : line_number(line)
 {
 }
 
@@ -36,4 +36,9 @@ void ABSNode::acceptVisitor(ABSASTVisitor* visitor)
 
 int ABSNode::getNbChildren() const {
   return children.size();
+}
+
+
+int ABSNode::getLineNumber() const {
+  return line_number;
 }

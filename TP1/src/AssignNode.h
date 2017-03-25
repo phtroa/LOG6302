@@ -1,18 +1,20 @@
 #pragma once
 
 #include "ABSNode.h"
+#include "InfoType.h"
 
 #include <string>
 
-class VarNode : public ABSNode {
+class AssignNode : public ABSNode {
 public:
-    VarNode(const std::string& name, int line);
-    ~VarNode();
+    AssignNode(const std::string& name, int line);
+    ~AssignNode();
 
-    std::string getVarName() const;
+    const std::string& getVarName() const;
     void setVarName(const std::string& name);
 
     void acceptVisitor(ABSASTVisitor* visitor);
+
 private:
   std::string varName;
 };

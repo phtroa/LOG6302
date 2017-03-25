@@ -4,7 +4,7 @@
 
 class CondNode : public ABSNode {
 public:
-  CondNode();
+  CondNode(int line);
   ~CondNode();
 
   virtual void acceptVisitor(ABSASTVisitor* visitor);

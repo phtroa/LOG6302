@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-BreakNode::BreakNode() : JumpNode() {
+BreakNode::BreakNode(int line) : JumpNode(line) {
 }
 
 BreakNode::~BreakNode() {

@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-BlockNode::BlockNode() : ABSNode()
+BlockNode::BlockNode(int line) : ABSNode(line)
 {
 }
 

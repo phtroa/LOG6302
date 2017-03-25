@@ -4,7 +4,7 @@
 
 class SwitchNode : public CondNode {
 public:
-  SwitchNode();
+  SwitchNode(int line);
   ~SwitchNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

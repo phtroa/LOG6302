@@ -4,6 +4,6 @@
 
 class ForNode : public LoopNode {
 public:
-  ForNode();
+  ForNode(int line);
   ~ForNode();
 };

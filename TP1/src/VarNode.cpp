@@ -2,7 +2,8 @@
 
 #include "ABSASTVisitor.h"
 
-VarNode::VarNode(const std::string& name) : ABSNode(), varName(name) {
+VarNode::VarNode(const std::string& name, int line)
+  : ABSNode(line), varName(name) {
 }
 
 VarNode::~VarNode()

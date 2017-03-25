@@ -25,6 +25,25 @@ bool Visitor::isHeaderSystem(clang::Decl* D) const
 
   return false;
 }
+
+bool Visitor::extractLocationInfo(const clang::FullSourceLoc& location,
+                                  std::string& filname, unsigned int& line_number,
+                                   unsigned int& col_number)
+{
+  filname = "Unknown";
+  line_number = 0;
+  col_number = 0;
+  if (context_.getSourceManager().getFileEntryForID(location.getFileID()) != nullptr) {
+    filname   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
+    line_number = location.getSpellingLineNumber();
+    col_number = location.getSpellingColumnNumber();
+
+    return true;
+  }
+
+  return false;
+}
+
 /***********************/
 /* C++ Method traverse */
 /***********************/
@@ -41,12 +60,7 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (context_.getSourceManager().getFileEntryForID(location.getFileID()) != nullptr) {
-    file_path   = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
-    line_number = location.getSpellingLineNumber();
-    col_number = location.getSpellingColumnNumber();
-  }
-  else {
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cerr << "got nullptr in CXXMethodDecl" << std::endl;
   }
   std::string methodName = D->getNameAsString();
@@ -89,7 +103,8 @@ bool Visitor::TraverseCXXMethodDecl(clang::CXXMethodDecl *D) {
 
   std::shared_ptr<ABSNode> parent = infoTree->getPtrToClass(classID);
   std::cout<<"[debug] className \""<< className <<"\"\n";
-  std::shared_ptr<ABSNode> myNode(new MethodNode(methodName, file_path, D->getAccess()));
+  std::shared_ptr<ABSNode> myNode(new MethodNode(methodName, file_path,
+                                                line_number, D->getAccess()));
   MethodNode* myNodeRaw = static_cast<MethodNode*>(myNode.get());
   myNodeRaw->setReturnType(returnType);
   for (auto it = D->param_begin(); it != D->param_end(); it++) {
@@ -137,19 +152,20 @@ bool Visitor::TraverseCXXRecordDecl(clang::CXXRecordDecl *D)
 
   clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
 
-  std::string  file_path("");
   std::string  id = computeID(D) + className;
-  if (context_.getSourceManager().getFileEntryForID(location.getFileID()) != nullptr) {
-    file_path = context_.getSourceManager().getFileEntryForID(location.getFileID())->getName();
-    std::cout<<"[LOG6302] Traverse de la classe \""<< className << "(id = )"
-             << " in file " << file_path << " at " << location.getSpellingLineNumber() <<"\"\n";
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<<"[LOG6302] Traverse de la classe \""<< className
+             << " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
   //Since We are building only one tree, we need to verify if we have already
   //encounter the class
   std::shared_ptr<ABSNode> myNode;
   if (!infoTree->isClassIn(id)) {
-    myNode = std::shared_ptr<ABSNode>(new ClassNode(className, file_path, id));
+    myNode = std::shared_ptr<ABSNode>(new ClassNode(className, file_path, id, line_number));
     infoTree->addPtrToClass(id, myNode);
     if (D->hasDefinition()) {
       completeBaseList(D, myNode);
@@ -217,11 +233,22 @@ bool Visitor::TraverseNamespaceDecl(clang::NamespaceDecl *D)
   if (isHeaderSystem(D)) {
     return true;
   }
-  std::shared_ptr<ABSNode> myNode;
+
   std::string namespaceName = D->getNameAsString();
+  clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<<"[LOG6302] Traverse de la namespace \""<< namespaceName
+             << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  std::shared_ptr<ABSNode> myNode;
   std::string namespaceId = computeID(D);
   if (!infoTree->isNamespaceIn(namespaceId)) {
-    myNode = std::shared_ptr<ABSNode>(new NamespaceNode(namespaceName, namespaceId));
+    myNode = std::shared_ptr<ABSNode>(new NamespaceNode(namespaceName,
+                                                      namespaceId, line_number));
     //We add the class to the Tree information
     infoTree->addPtrToNamespace(namespaceId, myNode);
     myAst->linkParentToChild(currNode, myNode);
@@ -271,7 +298,15 @@ bool Visitor::TraverseFieldDecl(clang::FieldDecl *D) {
       visStr = "none";
       break;
   }
-  std::cout<<"[LOG6302] Traverse d'un attribut : \"" << attName << " visibilité : " << visStr << "\"\n";
+
+  clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<<"[LOG6302] Traverse d'un attribut : \"" << attName << " visibilité : " << visStr
+             << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
   InfoType iType = extractedFinalType(D->getType());
   if (iType.isRelatedToClassType())
@@ -284,7 +319,8 @@ bool Visitor::TraverseFieldDecl(clang::FieldDecl *D) {
 
   clang::QualType qualReturn = D->getType();
   std::string attType = qualReturn.getAsString();
-  std::shared_ptr<ABSNode> myNode(new AttributeNode(attName, iType, D->getAccess()));
+  std::shared_ptr<ABSNode> myNode(new AttributeNode(attName, iType,
+                                                    line_number, D->getAccess()));
   myAst->linkParentToChild(myClassNode, myNode); //we link to the class
 
   currNode = myNode;
@@ -305,9 +341,17 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
   }
 
   std::string varName = D->getNameAsString();
-  std::cout<<"[LOG6302] Traverse de la variable \""<< varName <<"\"\n";
 
-  std::shared_ptr<ABSNode> myNode(new VarNode(varName));
+  clang::FullSourceLoc location = context_.getFullLoc(D->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<<"LOG6302] Traverse de la variable \""<< varName
+             << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  std::shared_ptr<ABSNode> myNode(new VarNode(varName, line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -330,9 +374,16 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<") \"\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<")"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new IfNode());
+  std::shared_ptr<ABSNode> myNode(new IfNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -346,6 +397,61 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
   return true;
 }
 
+bool Visitor::TraverseBinaryOperator(clang::BinaryOperator *S) {
+  if (!inMethod || !S->isAssignmentOp()) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une assignation : "
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  //Since we are in an assignation, the LHS must be a DeclRefExpr
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(S->getLHS());
+  std::string varName;
+  if (lhs != nullptr) {
+    varName = lhs->getDecl()->getNameAsString();
+  }
+  std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseBinaryOperator(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'une assignation : " << std::endl;
+
+  return true;
+}
+
+// bool Visitor::TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S) {
+//   if (!inMethod || !S->isAssignmentOp()) {
+//     return true;
+//   }
+//
+//   std::cout<<"[LOG6302] Traverse d'une assignation : " << std::endl;
+//
+//   auto lhs = dyn_cast_or_null<DeclRefExpr>(S->getLHS());
+//   std::string varName;
+//   if (lhs != nullptr) {
+//     varName = lhs->getNameAsString();
+//   }
+//   std::shared_ptr<ABSNode> myNode(new AssignNode(varName));
+//   myAst->linkParentToChild(currNode, myNode);
+//
+//   currNode = myNode;
+//   clang::RecursiveASTVisitor<Visitor>::TraverseCXXOperatorCallExpr(S);
+//   currNode = myNode->getParent();
+//
+//   std::cout<<"[LOG6302] Fin Traverse d'une assignation : " << std::endl;
+//
+//   return true;
+// }
 /**********************/
 /* switch traverse    */
 /**********************/
@@ -354,9 +460,16 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new SwitchNode());
+  std::shared_ptr<ABSNode> myNode(new SwitchNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -376,9 +489,16 @@ bool Visitor::TraverseCaseStmt (clang::CaseStmt  *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'un case" << std::endl;
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un case"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new BlockNode());
+  std::shared_ptr<ABSNode> myNode(new BlockNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -398,9 +518,16 @@ bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'un saut : \" break\"\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un saut : break"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new BreakNode());
+  std::shared_ptr<ABSNode> myNode(new BreakNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -420,9 +547,16 @@ bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'un saut : \" continue\"\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un saut : continue"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new ContinueNode());
+  std::shared_ptr<ABSNode> myNode(new ContinueNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -442,9 +576,16 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new ForNode());
+  std::shared_ptr<ABSNode> myNode(new ForNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -464,9 +605,16 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n";
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new WhileNode());
+  std::shared_ptr<ABSNode> myNode(new WhileNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -486,9 +634,16 @@ bool Visitor::TraverseReturnStmt(clang::ReturnStmt *S) {
     return true;
   }
 
-  std::cout<<"[LOG6302] Traverse d'un return" << std::endl;
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un return"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new ReturnNode());
+  std::shared_ptr<ABSNode> myNode(new ReturnNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -508,9 +663,16 @@ bool Visitor::TraverseCompoundStmt(clang::CompoundStmt *S) {
     return clang::RecursiveASTVisitor<Visitor>::TraverseCompoundStmt(S);
   }
 
-  std::cout<<"[LOG6302] Traverse d'un block condition" << std::endl;
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un block condition"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
 
-  std::shared_ptr<ABSNode> myNode(new BlockNode());
+  std::shared_ptr<ABSNode> myNode(new BlockNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;

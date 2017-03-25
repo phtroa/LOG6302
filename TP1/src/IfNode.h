@@ -4,7 +4,7 @@
 
 class IfNode : public CondNode {
 public:
-  IfNode();
+  IfNode(int line);
   ~IfNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

@@ -2,8 +2,8 @@
 
 #include "ABSASTVisitor.h"
 
-NamespaceNode::NamespaceNode(const std::string& name, const std::string& id)
-: ABSNode(), namespaceName(name), namespaceId(id)
+NamespaceNode::NamespaceNode(const std::string& name, const std::string& id, int line)
+: ABSNode(line), namespaceName(name), namespaceId(id)
 {
 }
 

@@ -1,6 +1,6 @@
 #include "WhileNode.h"
 
-WhileNode::WhileNode()
+WhileNode::WhileNode(int line) : LoopNode(line)
 {}
 
 WhileNode::~WhileNode()

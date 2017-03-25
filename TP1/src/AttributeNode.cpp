@@ -4,8 +4,9 @@
 
 AttributeNode::AttributeNode(const std::string& name,
                             const InfoType& type,
+                            int line,
                             int visibility)
-: ABSNode(), attName(name), ifType(type), attVsblt(visibility)
+: ABSNode(line), attName(name), ifType(type), attVsblt(visibility)
 {
 }
 

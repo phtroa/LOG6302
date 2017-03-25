@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-LoopNode::LoopNode() : ABSNode() {
+LoopNode::LoopNode(int line) : ABSNode(line) {
 }
 
 LoopNode::~LoopNode()

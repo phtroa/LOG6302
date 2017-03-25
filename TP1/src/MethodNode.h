@@ -4,7 +4,8 @@
 
 class MethodNode : public ABSNode {
 public:
-  MethodNode(const std::string& myClassName, const std::string& myFname, int visibility = 0);
+  MethodNode(const std::string& myClassName, const std::string& myFname,
+              int line, int visibility = 0);
 
   ~MethodNode();
 
@@ -25,7 +26,7 @@ public:
   int getVisibility() const;
 
   void acceptVisitor(ABSASTVisitor* visitor);
-  
+
 private:
   std::string methodName;
   std::string fileName;

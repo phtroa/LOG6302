@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-IfNode::IfNode() : CondNode() {
+IfNode::IfNode(int line) : CondNode(line) {
 }
 
 IfNode::~IfNode()

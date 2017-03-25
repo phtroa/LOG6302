@@ -6,7 +6,7 @@
 
 class NamespaceNode : public ABSNode {
 public:
-    NamespaceNode(const std::string& name, const std::string& id);
+    NamespaceNode(const std::string& name, const std::string& id, int line);
     ~NamespaceNode();
 
     std::string getName() const;

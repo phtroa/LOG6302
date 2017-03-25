@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-SwitchNode::SwitchNode() : CondNode() {
+SwitchNode::SwitchNode(int line) : CondNode(line) {
 }
 
 SwitchNode::~SwitchNode()

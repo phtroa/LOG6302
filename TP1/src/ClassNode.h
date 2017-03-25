@@ -9,7 +9,8 @@
 class ClassNode : public ABSNode {
 public:
   ClassNode(const std::string& name, const std::string& file,
-                                    const std::string& id);
+                                    const std::string& id,
+                                    int line);
   ~ClassNode();
 
   std::string getID() const;

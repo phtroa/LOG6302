@@ -3,8 +3,8 @@
 #include "ABSASTVisitor.h"
 
 ClassNode::ClassNode(const std::string& name, const std::string& file,
-                                              const std::string& id)
- : className(name), filePath(file), classId(id)
+                                              const std::string& id, int line)
+ : ABSNode(line), className(name), filePath(file), classId(id)
 {
 }
 

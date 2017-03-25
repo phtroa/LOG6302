@@ -9,7 +9,7 @@ class ABSASTVisitor;
 //represent a node in our ast
 class ABSNode {
 public:
-  ABSNode();
+  ABSNode(int line);
   virtual ~ABSNode() = 0;
   ABSNode(std::shared_ptr<ABSNode> parent);
   void addChild(std::shared_ptr<ABSNode> child);
@@ -19,8 +19,10 @@ public:
   virtual void acceptVisitor(ABSASTVisitor* visitor);
 
   int getNbChildren() const;
+  int getLineNumber() const;
 
 protected:
   std::vector<std::shared_ptr<ABSNode>> children;
   std::weak_ptr<ABSNode> parent;
+  int line_number;
 };

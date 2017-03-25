@@ -8,10 +8,7 @@ void CFG::dump(std::ostream& o) const
 {
   std::string idInGraph;
   for (auto it = nodes.begin(); it != nodes.end(); it++) {
-    idInGraph = myID + std::to_string(it->getId());
-    o << idInGraph << " [" << std::endl;
-    o << "label=\"" << it->getNodeType() << "\"" << std::endl;
-    o << "]" << std::endl;
+    o << myID << *it << std::endl;
   }
 
   std::string idsrc;

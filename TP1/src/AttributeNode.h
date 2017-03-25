@@ -9,6 +9,7 @@ class AttributeNode : public ABSNode {
 public:
     AttributeNode(const std::string& name,
                   const InfoType& type,
+                  int line,
                   int visibility = 0);
     ~AttributeNode();
 
@@ -20,7 +21,7 @@ public:
     const InfoType& getType() const;
 
     void acceptVisitor(ABSASTVisitor* visitor);
-    
+
 private:
   std::string attName;
   InfoType ifType;

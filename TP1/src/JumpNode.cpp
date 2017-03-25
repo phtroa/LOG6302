@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-JumpNode::JumpNode() : ABSNode() {
+JumpNode::JumpNode(int line) : ABSNode(line) {
 }
 
 JumpNode::~JumpNode() {

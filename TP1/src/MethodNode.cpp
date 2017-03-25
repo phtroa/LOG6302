@@ -2,8 +2,9 @@
 
 #include "ABSASTVisitor.h"
 
-MethodNode::MethodNode(const std::string& myClassName, const std::string& myfName, int visibility)
-: ABSNode(), methodName(myClassName), fileName(myfName), methodVis(visibility)
+MethodNode::MethodNode(const std::string& myClassName, const std::string& myfName,
+                        int line, int visibility)
+: ABSNode(line), methodName(myClassName), fileName(myfName), methodVis(visibility)
 {
 }
 

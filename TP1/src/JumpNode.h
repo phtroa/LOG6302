@@ -4,7 +4,7 @@
 
 class JumpNode : public ABSNode {
 public:
-  JumpNode();
+  JumpNode(int line);
   ~JumpNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

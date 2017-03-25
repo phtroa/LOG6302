@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-ProgramNode::ProgramNode() {
+ProgramNode::ProgramNode() : ABSNode(0) {
 }
 
 ProgramNode::~ProgramNode() {

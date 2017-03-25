@@ -6,7 +6,7 @@
 
 class WhileNode : public LoopNode {
 public:
-  WhileNode();
+  WhileNode(int line);
   ~WhileNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

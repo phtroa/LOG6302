@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-CondNode::CondNode() : ABSNode() {
+CondNode::CondNode(int line) : ABSNode(line) {
 }
 
 CondNode::~CondNode()

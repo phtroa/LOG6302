@@ -45,6 +45,10 @@ ABSASTVisitor::~ABSASTVisitor()
 {
 }
 
+ void ABSASTVisitor::visitPre(AssignNode* node)
+{
+}
+
  void ABSASTVisitor::visitPre(ReturnNode* node)
 {
 }
@@ -95,6 +99,10 @@ void ABSASTVisitor::visitBetween(AttributeNode* node)
 {
 }
 
+void ABSASTVisitor::visitBetween(AssignNode* node)
+{
+}
+
 void ABSASTVisitor::visitBetween(ReturnNode* node)
 {
 }
@@ -140,6 +148,10 @@ void ABSASTVisitor::visitBetween(BlockNode* node)
 }
 
  void ABSASTVisitor::visitPost(AttributeNode* node)
+{
+}
+
+ void ABSASTVisitor::visitPost(AssignNode* node)
 {
 }
 

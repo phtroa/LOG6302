@@ -4,7 +4,7 @@
 
 class ContinueNode : public JumpNode {
 public:
-  ContinueNode();
+  ContinueNode(int line);
   ~ContinueNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);

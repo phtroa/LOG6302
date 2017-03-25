@@ -2,7 +2,7 @@
 
 #include "ABSASTVisitor.h"
 
-ReturnNode::ReturnNode() : ABSNode() {
+ReturnNode::ReturnNode(int line) : ABSNode(line) {
 }
 
 ReturnNode::~ReturnNode()

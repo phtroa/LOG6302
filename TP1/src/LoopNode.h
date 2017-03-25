@@ -4,7 +4,7 @@
 
 class LoopNode : public ABSNode {
 public:
-  LoopNode();
+  LoopNode(int line);
   ~LoopNode();
 
   void acceptVisitor(ABSASTVisitor* visitor);
