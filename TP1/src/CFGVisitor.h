@@ -7,6 +7,7 @@
 
 #include "ABSASTVisitor.h"
 #include "CFGNode.h"
+#include "CFGAssignNode.h"
 #include "CFGCondNode.h"
 #include "CFGBreakNode.h"
 #include "CFGBlockNode.h"
@@ -23,6 +24,7 @@ class CFGVisitor : public ABSASTVisitor {
 public:
   CFGVisitor();
   ~CFGVisitor();
+    virtual void visitPre(AssignNode* node);
     virtual void visitPre(CondNode* node);
     virtual void visitPre(JumpNode* node);
     virtual void visitPre(LoopNode* node);
@@ -34,6 +36,7 @@ public:
     virtual void visitBetween(CondNode* node);
 
     virtual void visitPost(MethodNode* node);
+    virtual void visitPost(AssignNode* node);
     virtual void visitPost(CondNode* node);
     virtual void visitPost(JumpNode* node);
     virtual void visitPost(LoopNode* node);
@@ -42,6 +45,7 @@ public:
     virtual void visitPost(ReturnNode* node);
 
     std::vector<CFG>& getGraph();
+    void dump(std::ostream& o) const;
 private:
   int globalID;
   int localID;

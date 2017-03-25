@@ -10,8 +10,10 @@ class CFGNode
     CFGNode(int id, const std::string& type, int line);
     int getId() const;
     int getLineNumber() const;
+    virtual bool isAssignement() const;
+    virtual std::string getLValueName() const;
     std::string getNodeType() const;
-    void dump(std::ostream& o) const;
+    virtual void dump(std::ostream& o) const;
   private:
     int myID;
     std::string nodeType;

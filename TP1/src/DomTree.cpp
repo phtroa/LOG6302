@@ -1,6 +1,6 @@
 #include "DomTree.h"
 
-DomTree::DomTree(const std::vector<CFGNode>& nodes, int* links, int size) : mNodes(nodes)
+DomTree::DomTree(const std::vector<CFGNode*>& nodes, int* links, int size) : mNodes(nodes)
 {
   for (size_t i = 0; i < size; i++) {
     mLinks.push_back(links[i]);
@@ -12,7 +12,7 @@ void DomTree::dump(std::ostream& o) const
 
   std::cout << " digraph G {" << std::endl;
   for (auto it = mNodes.begin(); it != mNodes.end(); it++) {
-    it->dump(o);
+    (*it)->dump(o);
   }
 
   std::string idsrc;

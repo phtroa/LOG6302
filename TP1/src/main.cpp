@@ -133,8 +133,9 @@ int main(int argc, const char **argv) {
   //Print the dot file
   CFGVisitor printCFG;
   myAst->acceptVisitor(&printCFG);
+  printCFG.dump(std::cout);
 
-  std::cout << "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::vector<CFG> graph = printCFG.getGraph();
   Dominator dom;
   for (auto it = graph.begin(); it != graph.end(); it++) {

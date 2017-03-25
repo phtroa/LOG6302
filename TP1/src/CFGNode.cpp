@@ -21,6 +21,15 @@ std::string CFGNode::getNodeType() const
   return nodeType;
 }
 
+bool CFGNode::isAssignement() const
+{
+  return false;
+}
+
+std::string CFGNode::getLValueName() const
+{
+  return "";
+}
 
 void CFGNode::dump(std::ostream& o) const
 {

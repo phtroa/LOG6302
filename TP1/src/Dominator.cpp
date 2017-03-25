@@ -58,11 +58,9 @@ void Dominator::makeDomTree()
   makeDFSTree();
   bool changed = true;
   while (changed) {
-    std::cout << "while 1 " << std::endl;
     changed = false;
     int currNode = 0;
     while (currNode < cfg->getSize()) {
-      std::cout << "while 2 " << std::endl;
       int c = currNode++;
       if ((cfg->getPredecessor(c)).size() == 0) {
         continue;
@@ -71,14 +69,11 @@ void Dominator::makeDomTree()
       int currParent = 0;
       int parent = (cfg->getPredecessor(c))[currParent++];
       while (currParent < (cfg->getPredecessor(c)).size()) {
-        std::cout << "while 3 " << std::endl;
         int p = (cfg->getPredecessor(c))[currParent++];
         if (treeNodes.find(p) == treeNodes.end()) {
           continue;
         }
-        std::cout << "avant nca" << std::endl;
         parent = nca(parent, p);
-        std::cout << "apres nca" << std::endl;
       }
       if (domTreeParent[c] != parent) {
         domTreeParent[c] = parent;
@@ -93,14 +88,12 @@ int Dominator::nca(int node1, int node2)
   std::set<int> path;
   int c = node1;
   while (c != -1) {
-  std::cout << "nca 1" << std::endl;
     path.insert(c);
     c = domTreeParent[c];
   }
 
   c = node2;
   while (c != -1 && path.find(c) == path.end()) {
-  std::cout << "nca 2" << std::endl;
     c = domTreeParent[c];
   }
 

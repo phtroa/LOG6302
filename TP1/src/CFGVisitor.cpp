@@ -1,5 +1,6 @@
 #include "CFGVisitor.h"
 
+#include "AssignNode.h"
 #include "ClassNode.h"
 #include "CondNode.h"
 #include "JumpNode.h"
@@ -19,24 +20,42 @@ CFGVisitor::CFGVisitor() : localID(0), globalID(0), needlink(true)
 CFGVisitor::~CFGVisitor()
 {}
 
+void CFGVisitor::visitPre(AssignNode* node)
+{
+
+  int beginID = localID;
+  std::cout << "in visitPre Assign " + std::to_string(beginID) << std::endl;
+  CFGAssignNode* assign = new CFGAssignNode(beginID,"Assignement" + std::to_string(beginID), node->getVarName(), node->getLineNumber());
+  localID++;
+  graph.back().addNode(assign);
+
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+
+  stackBegin.push_back(beginID);
+  stackEnd.push_back(beginID);
+  currID = beginID;
+  std::cout << "Fin visitPre Assign" + std::to_string(beginID) << std::endl;
+}
+
 void CFGVisitor::visitPre(CondNode* node)
 {
 
   int beginID = localID;
   std::cout << "in visitPre cond " + std::to_string(beginID) << std::endl;
-  CFGNode CondEntry(localID++,"CondBegin" + std::to_string(beginID), node->getLineNumber());
+  CFGNode*  CondEntry = new CFGNode(localID++,"CondBegin" + std::to_string(beginID), node->getLineNumber());
   graph.back().addNode(CondEntry);
 
   graph.back().addVertice(currID, beginID);
   graph.back().addReverseVertice(beginID, currID);
 
   int condID = localID;
-  CFGNode CondNode(localID++,"Condition" + std::to_string(beginID), node->getLineNumber());
+  CFGNode* CondNode = new CFGNode(localID++,"Condition" + std::to_string(beginID), node->getLineNumber());
   graph.back().addNode(CondNode);
   graph.back().addVertice(beginID, condID);
   graph.back().addReverseVertice(condID, beginID);
   int endID = localID;
-  CFGNode CondEnd(localID++,"CondEnd" + std::to_string(beginID), node->getLineNumber());
+  CFGNode* CondEnd = new CFGNode(localID++,"CondEnd" + std::to_string(beginID), node->getLineNumber());
   graph.back().addNode(CondEnd);
   if (node->getNbChildren() < 2) {
     graph.back().addVertice(condID, endID);
@@ -86,13 +105,13 @@ void CFGVisitor::visitPre(JumpNode* node)
   int breakID = loopStackEnd.back();
   int ContinueID = loopStackEnd.back();
   if (true) { //TODO change this
-    CFGNode breakNode(localID++,"Break", node->getLineNumber());
+    CFGNode* breakNode = new CFGNode(localID++,"Break", node->getLineNumber());
     graph.back().addNode(breakNode);
     graph.back().addVertice(id, breakID);
     graph.back().addReverseVertice(breakID, id);
   }
   else {
-    CFGNode continueNode(localID++,"Continue", node->getLineNumber());
+    CFGNode* continueNode = new CFGNode(localID++,"Continue", node->getLineNumber());
     graph.back().addNode(continueNode);
     graph.back().addVertice(id, ContinueID);
     graph.back().addReverseVertice(ContinueID, id);
@@ -115,15 +134,15 @@ void CFGVisitor::visitPre(LoopNode* node)
   std::cout << "in visitPre Loop" << std::endl;
 
   int beginID = localID;
-  CFGNode loopEntry(localID++,"LoopBegin", node->getLineNumber());
+  CFGNode* loopEntry = new CFGNode(localID++,"LoopBegin", node->getLineNumber());
   graph.back().addNode(loopEntry);
   graph.back().addVertice(currID, beginID);
   graph.back().addReverseVertice(beginID, currID);
   int condID = localID;
-  CFGNode CondNode(localID++,"LoopCondition", node->getLineNumber());
+  CFGNode* CondNode = new CFGNode(localID++,"LoopCondition", node->getLineNumber());
   graph.back().addNode(CondNode);
   int endID = localID;
-  CFGNode loopEnd(localID++,"LoopEnd", node->getLineNumber());
+  CFGNode* loopEnd = new CFGNode(localID++,"LoopEnd", node->getLineNumber());
   graph.back().addNode(loopEnd);
   loopStackBegin.push_back(beginID);
   loopStackEnd.push_back(endID);
@@ -157,9 +176,9 @@ void CFGVisitor::visitPre(MethodNode* node)
   graph.push_back(CFG(node->getMethodName() + std::to_string(globalID), entryID, exitID));
   globalID++;
 
-  CFGNode entryNode(entryID,"Entry " + node->getMethodName(), node->getLineNumber());
+  CFGNode* entryNode = new CFGNode(entryID,"Entry " + node->getMethodName(), node->getLineNumber());
   graph.back().addNode(entryNode);
-  CFGNode exitNode(exitID,"Exit " + node->getMethodName(), node->getLineNumber());
+  CFGNode* exitNode = new CFGNode(exitID,"Exit " + node->getMethodName(), node->getLineNumber());
   graph.back().addNode(exitNode);
   if (node->getNbChildren() < 1) {
     graph.back().addVertice(currID, exitID);
@@ -181,7 +200,7 @@ void CFGVisitor::visitPre(ReturnNode* node)
   std::cout << "in visitPre return" << std::endl;
   int beginID = localID;
   localID++;
-  CFGNode returnEntry(beginID,"Return", node->getLineNumber());
+  CFGNode* returnEntry = new CFGNode(beginID,"Return", node->getLineNumber());
   graph.back().addNode(returnEntry);
 
   graph.back().addVertice(currID, beginID);
@@ -196,6 +215,12 @@ void CFGVisitor::visitPre(ReturnNode* node)
   // currNode = retNode;
 
   std::cout << "Fin visitPre return" << std::endl;
+}
+
+void CFGVisitor::visitPost(AssignNode* node)
+{
+  std::cout << "in visitPost Assign" << std::endl;
+  std::cout << "Fin visitPost Assign" << std::endl;
 }
 
 void CFGVisitor::visitPost(MethodNode* node)
@@ -262,11 +287,6 @@ void CFGVisitor::visitPost(LoopNode* node)
 
 void CFGVisitor::visitPost(ProgramNode* node)
 {
-    std::cout << " digraph G {" << std::endl;
-    for (auto it = graph.begin(); it !=  graph.end(); it++) {
-      it->dump(std::cout);
-    }
-    std::cout << "}" << std::endl;
 }
 
  void CFGVisitor::visitPost(BlockNode* node)
@@ -283,4 +303,13 @@ void CFGVisitor::visitPost(ProgramNode* node)
 std::vector<CFG>& CFGVisitor::getGraph()
 {
   return graph;
+}
+
+void CFGVisitor::dump(std::ostream& o) const
+{
+    std::cout << " digraph G {" << std::endl;
+    for (auto it = graph.begin(); it !=  graph.end(); it++) {
+      it->dump(o);
+    }
+    std::cout << "}" << std::endl;
 }
