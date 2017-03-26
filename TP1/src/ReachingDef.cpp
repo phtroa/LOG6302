@@ -33,16 +33,15 @@ void ReachingDef::compute(CFG* cfg)
 void ReachingDef::iterate()
 {
   bool changed = true;
-  std::set<int> oldIn;
   std::set<int> diff;
   std::set<int> oldOut;
   while (changed) {
     changed = false;
+    std::cout << " in while " << std::endl;
     for (int i = 0; i < cfg->getSize(); i++) {
       if (i == cfg->getEntry()) {
         continue;
       }
-      oldIn = in[i];
       oldOut = out[i];
       //we compute in
       in[i].clear();
@@ -56,9 +55,10 @@ void ReachingDef::iterate()
       std::set_difference(in[i].begin(), in[i].end(),
                             kill[i].begin(), kill[i].end(),
                             inserter(diff, diff.begin()));
-      set_union(gen[i].begin(), gen[i].end(),
+      std::set_union(gen[i].begin(), gen[i].end(),
                 diff.begin(), diff.end(),
                 inserter(out[i], out[i].end()));
+      changed = changed || oldOut.size() != out[i].size();
       changed = changed || !std::equal(oldOut.begin(), oldOut.end(), out[i].begin());
     }
   }
