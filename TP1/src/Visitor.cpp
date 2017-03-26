@@ -239,7 +239,7 @@ bool Visitor::TraverseNamespaceDecl(clang::NamespaceDecl *D)
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout<<"[LOG6302] Traverse de la namespace \""<< namespaceName
              << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -303,7 +303,7 @@ bool Visitor::TraverseFieldDecl(clang::FieldDecl *D) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout<<"[LOG6302] Traverse d'un attribut : \"" << attName << " visibilité : " << visStr
              << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -346,7 +346,7 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout<<"LOG6302] Traverse de la variable \""<< varName
              << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -378,7 +378,7 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'une condition : \" if ("<<GetStatementString(S->getCond())<<")"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -397,22 +397,22 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
   return true;
 }
 
-bool Visitor::TraverseBinaryOperator(clang::BinaryOperator *S) {
-  if (!inMethod || !S->isAssignmentOp()) {
+bool Visitor::TraverseBinAssign(clang::BinaryOperator *Bop) {
+  std::cout << "[LOG6302] Traverse d'une assignation : " << std::endl;
+  if (!inMethod || !Bop->isAssignmentOp()) {
     return true;
   }
 
-  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  clang::FullSourceLoc location = context_.getFullLoc(Bop->getLocStart());
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
-    std::cout << "[LOG6302] Traverse d'une assignation : "
-    << " in file " << file_path << " at " << line_number <<"\"\n";
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<< " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
   //Since we are in an assignation, the LHS must be a DeclRefExpr
-  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(S->getLHS());
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(Bop->getLHS());
   std::string varName;
   if (lhs != nullptr) {
     varName = lhs->getDecl()->getNameAsString();
@@ -421,7 +421,7 @@ bool Visitor::TraverseBinaryOperator(clang::BinaryOperator *S) {
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
-  clang::RecursiveASTVisitor<Visitor>::TraverseBinaryOperator(S);
+  clang::RecursiveASTVisitor<Visitor>::TraverseBinaryOperator(Bop);
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une assignation : " << std::endl;
@@ -464,7 +464,7 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -493,7 +493,7 @@ bool Visitor::TraverseCaseStmt (clang::CaseStmt  *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'un case"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -522,7 +522,7 @@ bool Visitor::TraverseBreakStmt(clang::BreakStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'un saut : break"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -551,7 +551,7 @@ bool Visitor::TraverseContinueStmt(clang::ContinueStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'un saut : continue"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -580,7 +580,7 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'une boucle : \"for\"("<<GetStatementString(S->getCond())<<")\n"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -609,8 +609,8 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
-    std::cout << "[LOG6302] Traverse d'une boucle : \"while\"("<<GetStatementString(S->getCond())<<")\n"
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une boucle : while("<<GetStatementString(S->getCond())<<")\n"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
@@ -638,7 +638,7 @@ bool Visitor::TraverseReturnStmt(clang::ReturnStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'un return"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
@@ -667,7 +667,7 @@ bool Visitor::TraverseCompoundStmt(clang::CompoundStmt *S) {
   std::string  file_path("Unknown");
   unsigned int line_number(0);
   unsigned int col_number(0);
-  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
     std::cout << "[LOG6302] Traverse d'un block condition"
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }

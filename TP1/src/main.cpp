@@ -142,5 +142,7 @@ int main(int argc, const char **argv) {
     std::cout << *(dom.compute(&(*it))) << std::endl;
   }
 
+  std::cout << "****************************************************************" << std::endl;
+
   return ret;
 }

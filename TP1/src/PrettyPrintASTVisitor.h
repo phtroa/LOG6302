@@ -18,6 +18,7 @@ public:
     virtual void visitPre(ProgramNode* node);
     virtual void visitPre(VarNode* node);
     virtual void visitPre(AttributeNode* node);
+    virtual void visitPre(AssignNode* node);
     virtual void visitPre(NamespaceNode* node);
     virtual void visitPre(ReturnNode* node);
     virtual void visitPre(BlockNode* node);
@@ -30,6 +31,7 @@ public:
     virtual void visitPost(ProgramNode* node);
     virtual void visitPost(VarNode* node);
     virtual void visitPost(AttributeNode* node);
+    virtual void visitPost(AssignNode* node);
     virtual void visitPost(NamespaceNode* node);
     virtual void visitPost(ReturnNode* node);
     virtual void visitPost(BlockNode* node);

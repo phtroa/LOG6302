@@ -13,6 +13,7 @@
 #include "BlockNode.h"
 #include "VarNode.h"
 #include "AttributeNode.h"
+#include "AssignNode.h"
 
 
 PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
@@ -111,6 +112,15 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   spacePadding++;
 }
 
+void PrettyPrintASTVisitor::visitPre(AssignNode* node)
+{
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "AssignNode : " << node->getVarName() << std::endl;
+  spacePadding++;
+
+}
+
  void PrettyPrintASTVisitor::visitPre(ReturnNode* node)
 {
 
@@ -178,6 +188,11 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 }
 
  void PrettyPrintASTVisitor::visitPost(AttributeNode* node)
+{
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(AssignNode* node)
 {
   spacePadding--;
 }

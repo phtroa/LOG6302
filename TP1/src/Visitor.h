@@ -48,7 +48,7 @@ public:
   bool TraverseFieldDecl(clang::FieldDecl *D);
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
-  bool TraverseBinaryOperator(clang::BinaryOperator *S);
+  bool TraverseBinAssign(clang::BinaryOperator *Bop);
   //bool TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S);
   bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);

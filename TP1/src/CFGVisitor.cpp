@@ -221,6 +221,9 @@ void CFGVisitor::visitPost(AssignNode* node)
 {
   std::cout << "in visitPost Assign" << std::endl;
   std::cout << "Fin visitPost Assign" << std::endl;
+  
+  stackBegin.pop_back();
+  stackEnd.pop_back();
 }
 
 void CFGVisitor::visitPost(MethodNode* node)
