@@ -22,7 +22,7 @@ void CFGAssignNode::dump(std::ostream& o) const
   idInGraph = std::to_string(getId());
   o << idInGraph << " [" << std::endl;
   o << "label=\"" << getNodeType() << " at line : "
-  << getLineNumber() << "varName = "
+  << getLineNumber() << ", varName = "
   << varName << "\"" << std::endl;
   o << "]" << std::endl;
 }

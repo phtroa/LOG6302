@@ -14,7 +14,7 @@ std::shared_ptr<DomTree> Dominator::compute(CFG* cfg)
   makeDomTree();
   std::shared_ptr<DomTree> domTree = convertToCFG();
 
-  delete domTreeParent;
+  delete [] domTreeParent;
   domTreeParent = nullptr;
   treeNodes.clear();
 
@@ -32,7 +32,7 @@ void Dominator::makeDFSTree()
 {
   std::vector<int> stack;
   std::set<int> visited;
-  stack.push_back(cfg->getEntry());
+  stack.push_back(getEntry());
   while (!stack.empty()) {
     int top = stack.back();
     stack.pop_back();
@@ -41,7 +41,7 @@ void Dominator::makeDFSTree()
     }
 
     std::cout << "Avant successeur " << top << " size " << cfg->getSize() << std::endl;
-    for (auto it = (cfg->getSuccessors(top)).cbegin(); it != (cfg->getSuccessors(top)).cend(); it++) {
+    for (auto it = (getSuccessors(top)).cbegin(); it != (getSuccessors(top)).cend(); it++) {
       std::cout << "Apres successeur " << top << ":" << *it << std::endl;
       if (visited.find(*it) == visited.end() && *it != top) {
         stack.push_back(*it);
@@ -62,14 +62,14 @@ void Dominator::makeDomTree()
     int currNode = 0;
     while (currNode < cfg->getSize()) {
       int c = currNode++;
-      if ((cfg->getPredecessor(c)).size() == 0) {
+      if ((getPredecessor(c)).size() == 0) {
         continue;
       }
 
       int currParent = 0;
-      int parent = (cfg->getPredecessor(c))[currParent++];
-      while (currParent < (cfg->getPredecessor(c)).size()) {
-        int p = (cfg->getPredecessor(c))[currParent++];
+      int parent = (getPredecessor(c))[currParent++];
+      while (currParent < (getPredecessor(c)).size()) {
+        int p = (getPredecessor(c))[currParent++];
         if (treeNodes.find(p) == treeNodes.end()) {
           continue;
         }
@@ -98,4 +98,24 @@ int Dominator::nca(int node1, int node2)
   }
 
   return c;
+}
+
+const std::vector<int>& Dominator::getSuccessors(int id)
+{
+  return cfg->getSuccessors(id);
+}
+
+const std::vector<int>& Dominator::getPredecessor(int id)
+{
+  return cfg->getPredecessor(id);
+}
+
+int Dominator::getEntry() const
+{
+  return cfg->getEntry();
+}
+
+int Dominator::getExit() const
+{
+  return cfg->getExit();
 }

@@ -15,6 +15,8 @@
 #include "UMLASTVisitor.h"
 #include "CFGVisitor.h"
 #include "Dominator.h"
+#include "PostDominator.h"
+#include "ReachingDef.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
@@ -142,7 +144,18 @@ int main(int argc, const char **argv) {
     std::cout << *(dom.compute(&(*it))) << std::endl;
   }
 
-  std::cout << "****************************************************************" << std::endl;
+  std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+  PostDominator pdom;
+  for (auto it = graph.begin(); it != graph.end(); it++) {
+    std::cout << *(pdom.compute(&(*it))) << std::endl;
+  }
+
+  std::cout << "________________________________________________________________" << std::endl;
+  ReachingDef rea;
+  for (auto it = graph.begin(); it != graph.end(); it++) {
+    rea.compute(&(*it));
+    std::cout << rea << std::endl;
+  }
 
   return ret;
 }
