@@ -38,6 +38,29 @@ void CFGVisitor::visitPre(AssignNode* node)
   std::cout << "Fin visitPre Assign" + std::to_string(beginID) << std::endl;
 }
 
+void CFGVisitor::visitPre(VarNode* node)
+{
+  if (!node->isInitialised()) {
+    return;
+  }
+
+    int beginID = localID;
+    std::cout << "in visitPre varNode Assign " + std::to_string(beginID) << std::endl;
+    CFGAssignNode* assign = new CFGAssignNode(beginID,"VarDecl" + std::to_string(beginID), node->getVarName(), node->getLineNumber());
+    localID++;
+    graph.back().addNode(assign);
+
+    graph.back().addVertice(currID, beginID);
+    graph.back().addReverseVertice(beginID, currID);
+
+    stackBegin.push_back(beginID);
+    stackEnd.push_back(beginID);
+    currID = beginID;
+    std::cout << "Fin visitPre varNode Assign" + std::to_string(beginID) << std::endl;
+
+
+}
+
 void CFGVisitor::visitPre(CondNode* node)
 {
 
@@ -220,10 +243,20 @@ void CFGVisitor::visitPre(ReturnNode* node)
 void CFGVisitor::visitPost(AssignNode* node)
 {
   std::cout << "in visitPost Assign" << std::endl;
-  std::cout << "Fin visitPost Assign" << std::endl;
-  
   stackBegin.pop_back();
   stackEnd.pop_back();
+  std::cout << "Fin visitPost Assign" << std::endl;
+}
+
+void CFGVisitor::visitPost(VarNode* node)
+{
+  if (!node->isInitialised()) {
+    return;
+  }
+  std::cout << "in visitPost VarDecl" << std::endl;
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  std::cout << "Fin visitPost VarDecl" << std::endl;
 }
 
 void CFGVisitor::visitPost(MethodNode* node)

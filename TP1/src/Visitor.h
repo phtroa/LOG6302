@@ -49,6 +49,10 @@ public:
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
   bool TraverseBinAssign(clang::BinaryOperator *Bop);
+  bool TraverseUnaryPostInc(clang::UnaryOperator* Stmt);
+  bool TraverseUnaryPostDec(clang::UnaryOperator* Stmt);
+  bool TraverseUnaryPreInc(clang::UnaryOperator* Stmt);
+  bool TraverseUnaryPreDec(clang::UnaryOperator* Stmt);
   //bool TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S);
   bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);

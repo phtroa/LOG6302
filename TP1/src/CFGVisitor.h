@@ -25,6 +25,7 @@ public:
   CFGVisitor();
   ~CFGVisitor();
     virtual void visitPre(AssignNode* node);
+    virtual void visitPre(VarNode* node);
     virtual void visitPre(CondNode* node);
     virtual void visitPre(JumpNode* node);
     virtual void visitPre(LoopNode* node);
@@ -37,6 +38,7 @@ public:
 
     virtual void visitPost(MethodNode* node);
     virtual void visitPost(AssignNode* node);
+    virtual void visitPost(VarNode* node);
     virtual void visitPost(CondNode* node);
     virtual void visitPost(JumpNode* node);
     virtual void visitPost(LoopNode* node);

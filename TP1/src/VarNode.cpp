@@ -2,8 +2,9 @@
 
 #include "ABSASTVisitor.h"
 
-VarNode::VarNode(const std::string& name, int line)
-  : ABSNode(line), varName(name) {
+VarNode::VarNode(const std::string& name, int line, bool init)
+  : ABSNode(line), varName(name), isInit(init)
+  {
 }
 
 VarNode::~VarNode()
@@ -26,4 +27,15 @@ void VarNode::acceptVisitor(ABSASTVisitor* visitor)
     visitor->visitBetween(this);
   }
   visitor->visitPost(this);
+}
+
+bool VarNode::isInitialised() const
+{
+  return isInit;
+}
+
+
+void VarNode::setInit(bool init)
+{
+  isInit = init;
 }

@@ -351,7 +351,10 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
              << " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
-  std::shared_ptr<ABSNode> myNode(new VarNode(varName, line_number));
+  std::shared_ptr<ABSNode> myNode(new VarNode(varName, line_number, false));
+  if (D->hasInit()) {
+    static_cast<VarNode*>(myNode.get())->setInit(true);
+  }
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -427,6 +430,146 @@ bool Visitor::TraverseBinAssign(clang::BinaryOperator *Bop) {
   std::cout<<"[LOG6302] Fin Traverse d'une assignation : " << std::endl;
 
   return true;
+}
+
+bool Visitor::TraverseUnaryPostInc(clang::UnaryOperator* Stmt) {
+  std::cout << "[LOG6302] Traverse d'une assignation UnaryOperator : " << std::endl;
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(Stmt->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<< " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  //Since we are in an assignation, the LHS must be a DeclRefExpr
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(Stmt->getSubExpr());
+  if (lhs != nullptr) {
+    std::string varName;
+    varName = lhs->getDecl()->getNameAsString();
+    std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+    myAst->linkParentToChild(currNode, myNode);
+    currNode = myNode;
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+    currNode = myNode->getParent();
+  }
+  else {
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+  }
+
+  std::cout<<"[LOG6302] Fin Traverse d'une assignation UnaryOperator: " << std::endl;
+
+  return true;
+
+}
+
+bool Visitor::TraverseUnaryPostDec(clang::UnaryOperator* Stmt) {
+  std::cout << "[LOG6302] Traverse d'une assignation UnaryOperator : " << std::endl;
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(Stmt->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<< " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  //Since we are in an assignation, the LHS must be a DeclRefExpr
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(Stmt->getSubExpr());
+  if (lhs != nullptr) {
+    std::string varName;
+    varName = lhs->getDecl()->getNameAsString();
+    std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+    myAst->linkParentToChild(currNode, myNode);
+    currNode = myNode;
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+    currNode = myNode->getParent();
+  }
+  else {
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+  }
+
+  std::cout<<"[LOG6302] Fin Traverse d'une assignation UnaryOperator: " << std::endl;
+
+  return true;
+
+}
+
+bool Visitor::TraverseUnaryPreInc(clang::UnaryOperator* Stmt) {
+  std::cout << "[LOG6302] Traverse d'une assignation UnaryOperator : " << std::endl;
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(Stmt->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<< " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  //Since we are in an assignation, the LHS must be a DeclRefExpr
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(Stmt->getSubExpr());
+  if (lhs != nullptr) {
+    std::string varName;
+    varName = lhs->getDecl()->getNameAsString();
+    std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+    myAst->linkParentToChild(currNode, myNode);
+    currNode = myNode;
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+    currNode = myNode->getParent();
+  }
+  else {
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+  }
+
+  std::cout<<"[LOG6302] Fin Traverse d'une assignation UnaryOperator: " << std::endl;
+
+  return true;
+
+}
+
+bool Visitor::TraverseUnaryPreDec(clang::UnaryOperator* Stmt) {
+  std::cout << "[LOG6302] Traverse d'une assignation UnaryOperator : " << std::endl;
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(Stmt->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout<< " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  //Since we are in an assignation, the LHS must be a DeclRefExpr
+  auto lhs = clang::dyn_cast_or_null<clang::DeclRefExpr>(Stmt->getSubExpr());
+  if (lhs != nullptr) {
+    std::string varName;
+    varName = lhs->getDecl()->getNameAsString();
+    std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+    myAst->linkParentToChild(currNode, myNode);
+    currNode = myNode;
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+    currNode = myNode->getParent();
+  }
+  else {
+    clang::RecursiveASTVisitor<Visitor>::TraverseUnaryOperator(Stmt);
+  }
+
+  std::cout<<"[LOG6302] Fin Traverse d'une assignation UnaryOperator: " << std::endl;
+
+  return true;
+
 }
 
 // bool Visitor::TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S) {
