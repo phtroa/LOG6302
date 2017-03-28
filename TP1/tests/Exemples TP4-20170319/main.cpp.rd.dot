@@ -1,0 +1,21 @@
+digraph reaching_definitions {
+
+"3#Entry" [label="3#Entry Entry\lLine: 12\lOUT: "] ;
+"3#Entry" -> "5" ;
+"5" [label="5 DeclStmt\lLine: 13\lGEN: a \lKILL: 5 7 \lIN: \lOUT: a-5 "] ;
+"5" -> "9" ;
+"9" [label="9 BinaryOperator\lLine: 15\lOUT: a-5 "] ;
+"9" -> "7" ;
+"7" [label="7 BinaryOperator\lLine: 15\lGEN: a \lKILL: 5 7 \lIN: 5 \lOUT: a-7 "] ;
+"7" -> "12" ;
+"12" [label="12 DeclStmt\lLine: 17\lGEN: str \lKILL: 12 \lIN: 7 \lOUT: str-12 a-7 "] ;
+"12" -> "27" ;
+"27" [label="27 CXXOperatorCallExpr\lLine: 19\lOUT: str-12 a-7 "] ;
+"27" -> "24" ;
+"24" [label="24 CXXOperatorCallExpr\lLine: 19\lOUT: str-12 a-7 "] ;
+"24" -> "35" ;
+"35" [label="35 UnaryOperator\lLine: 21\lOUT: str-12 a-7 "] ;
+"35" -> "3#Exit" ;
+"3#Exit" [label="3#Exit Exit\lLine: 12\lOUT: str-12 a-7 "] ;
+
+}

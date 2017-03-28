@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DecAnticipeeWithAtt/dummy_Class.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DecAnticipeeWithAtt/main.cpp
+test.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DecAnticipeeWithAtt/test.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DecAnticipeeWithAtt/test.h
+dummy_Class.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/DecAnticipeeWithAtt/dummy_Class.h
+

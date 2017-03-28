@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Main.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Main.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Main.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Echiquier.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Echiquier.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Echiquier.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Piece.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Piece.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Piece.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Pion.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Pion.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Pion.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Roi.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Roi.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Roi.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage",
+  "command": "/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STRICT_ANSI__   -fno-rtti -pg   -v -I/home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2/lib/clang/3.3/include/ -std=gnu++11 -o CMakeFiles/testHeritageTableau.dir/Tour.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Tour.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/TestHeritage/Tour.cpp"
+}
+]

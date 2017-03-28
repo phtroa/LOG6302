@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.cpp
+Etudiant.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.h
+Homme.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.cpp
+Homme.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.cpp
+Prof.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.h
+Homme.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Universite.h
+Etudiant.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.h
+Prof.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.h
+
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/main.cpp
+Universite.h
+/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Universite.h
+

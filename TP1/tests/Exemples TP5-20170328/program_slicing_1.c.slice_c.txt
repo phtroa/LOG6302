@@ -1,0 +1,25 @@
+Definitions Set
+c 8 13 24 
+nc 8 12 15 
+nl 8 10 17 
+nw 8 11 22 
+inword 8 9 19 21 
+Reaching Definitions: 4 iterations.
+Uses Set
+nw 22 22 27 
+inword 20 20 
+nl 17 17 26 
+nc 15 15 28 
+c 14 16 18 18 18 18 14 18 18 16 
+
+Slice of node #28
+OperatingSystem root
+85 BinaryOperator
+27#Condition Condition
+22 BinaryOperator
+28 BinaryOperator
+
+Printing source code related to slice
+13:     c = getchar();
+14:     while ( c != EOF ) {
+24:         c = getchar();

@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML",
+  "command": "/usr/bin/c++ -I /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/universite.dir/main.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/main.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/main.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML",
+  "command": "/usr/bin/c++ -I /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/universite.dir/Etudiant.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Etudiant.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML",
+  "command": "/usr/bin/c++ -I /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/universite.dir/Prof.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Prof.cpp"
+},
+{
+  "directory": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML",
+  "command": "/usr/bin/c++ -I /home/filou/Documents/Hiver2017/LOG6302/LOG6302/clang+llvm-3.3-amd64-Ubuntu-12.04.2   -D_GLIBCXX_USE_CXX11_ABI=0 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS   -fno-rtti -pg   -std=gnu++11 -o CMakeFiles/universite.dir/Homme.cpp.o -c /home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.cpp",
+  "file": "/home/filou/Documents/Hiver2017/LOG6302/LOG6302/TP1/tests/MicroUML/Homme.cpp"
+}
+]

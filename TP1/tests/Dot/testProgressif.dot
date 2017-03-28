@@ -1,0 +1,19 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+
+        Animal [
+                label = "{char_traits|+ assign(char_type &,const char_type &) : void\l+ eq(const char_type &,const char_type &) : _Bool\l+ lt(const char_type &,const char_type &) : _Bool\l+ to_char_type(const int_type &) : char_type\l+ to_int_type(const char_type &) : int_type\l+ eq_int_type(const int_type &,const int_type &) : _Bool\l+ eof() : int_type\l+ not_eof(const int_type &) : int_type\l+ compare(const char_type *,const char_type *,std::size_t) : int\l+ length(const char_type *) : std::size_t\l+ find(const char_type *,std::size_t,const char_type &) : const typename char_traits<_CharT>::char_type *\l+ move(char_type *,const char_type *,std::size_t) : typename char_traits<_CharT>::char_type *\l+ copy(char_type *,const char_type *,std::size_t) : typename char_traits<_CharT>::char_type *\l+ assign(char_type *,std::size_t,char_type) : typename char_traits<_CharT>::char_type *\l+ compare(const char_type *,const char_type *,size_t) : int\l+ find(const char_type *,size_t,const char_type &) : const char_type *\l+ move(char_type *,const char_type *,size_t) : char_type *\l+ copy(char_type *,const char_type *,size_t) : char_type *\l+ assign(char_type *,size_t,char_type) : char_type *\l|}"
+        ]
+}

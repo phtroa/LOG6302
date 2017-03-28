@@ -1,0 +1,27 @@
+digraph cfg {
+
+"2#Entry" [label="Entry\lmain"] ;
+"4#Begin" [label="WhileBegin"] ;
+"4#Condition" [label="Condition"] ;
+"7#Begin" [label="IfBegin"] ;
+"7#Condition" [label="Condition"] ;
+"11" [label="UnaryOperator\l-" ] ;
+"10" [label="ReturnStmt"] ;
+"7#End" [label="IfEnd"] ;
+"4#End" [label="WhileEnd"] ;
+"13" [label="ReturnStmt"] ;
+"2#Exit" [label="Exit\lmain"] ;
+"2#Entry" -> "4#Begin" ;
+"4#Begin" -> "4#Condition" ;
+"4#Condition" -> "4#End" ;
+"4#Condition" -> "7#Begin" ;
+"4#End" -> "13" ;
+"7#Begin" -> "7#Condition" ;
+"13" -> "2#Exit" ;
+"7#Condition" -> "7#End" ;
+"7#Condition" -> "11" ;
+"7#End" -> "4#Begin" ;
+"11" -> "10" ;
+"10" -> "2#Exit" ;
+
+}

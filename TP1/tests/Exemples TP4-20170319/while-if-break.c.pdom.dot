@@ -1,0 +1,23 @@
+digraph dominators {
+
+"10" [label="BreakStmt\lLine: 4"]
+"4#End" -> "10"
+"2#Entry" [label="Entry\lLine: 1"]
+"4#Begin" -> "2#Entry"
+"7#Begin" [label="IfBegin\lLine: 3"]
+"7#Condition" -> "7#Begin"
+"7#End" [label="IfEnd\lLine: 3"]
+"4#Begin" -> "7#End"
+"4#Condition" [label="Condition\lLine: 2"]
+"4#End" -> "4#Condition"
+"7#Condition" [label="Condition\lLine: 3"]
+"4#End" -> "7#Condition"
+"4#End" [label="WhileEnd\lLine: 2"]
+"11" -> "4#End"
+"4#Begin" [label="WhileBegin\lLine: 2"]
+"4#Condition" -> "4#Begin"
+"11" [label="ReturnStmt\lLine: 8"]
+"2#Exit" -> "11"
+"2#Exit" [label="Exit\lLine: 1"]
+
+}

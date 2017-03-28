@@ -1,0 +1,21 @@
+digraph cfg {
+
+"3#Entry" [label="Entry\lmain"] ;
+"5" [label="DeclStmt"] ;
+"9" [label="BinaryOperator\l+" ] ;
+"7" [label="BinaryOperator\l=" ] ;
+"12" [label="DeclStmt"] ;
+"27" [label="CXXOperatorCallExpr\loperator<<"] ;
+"24" [label="CXXOperatorCallExpr\loperator<<"] ;
+"35" [label="UnaryOperator\l[post]++" ] ;
+"3#Exit" [label="Exit\lmain"] ;
+"3#Entry" -> "5" ;
+"5" -> "9" ;
+"9" -> "7" ;
+"7" -> "12" ;
+"12" -> "27" ;
+"27" -> "24" ;
+"24" -> "35" ;
+"35" -> "3#Exit" ;
+
+}

@@ -1,0 +1,1 @@
+/usr/bin/c++    -fno-rtti -pg   CMakeFiles/anticipeeWithAtt.dir/main.cpp.o  -o anticipeeWithAtt -rdynamic 
