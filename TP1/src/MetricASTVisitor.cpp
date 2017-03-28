@@ -38,7 +38,12 @@ MetricASTVisitor::~MetricASTVisitor()
   nbIf++;
 }
 
- void MetricASTVisitor::visitPre(JumpNode* node)
+ void MetricASTVisitor::visitPre(BreakNode* node)
+{
+  nbJump++;
+}
+
+ void MetricASTVisitor::visitPre(ContinueNode* node)
 {
   nbJump++;
 }

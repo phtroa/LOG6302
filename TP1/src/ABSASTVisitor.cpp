@@ -17,7 +17,11 @@ ABSASTVisitor::~ABSASTVisitor()
 {
 }
 
- void ABSASTVisitor::visitPre(JumpNode* node)
+void ABSASTVisitor::visitPre(BreakNode* node)
+{
+}
+
+void ABSASTVisitor::visitPre(ContinueNode* node)
 {
 }
 
@@ -71,7 +75,11 @@ void ABSASTVisitor::visitBetween(CondNode* node)
 {
 }
 
-void ABSASTVisitor::visitBetween(JumpNode* node)
+void ABSASTVisitor::visitBetween(BreakNode* node)
+{
+}
+
+void ABSASTVisitor::visitBetween(ContinueNode* node)
 {
 }
 
@@ -123,10 +131,6 @@ void ABSASTVisitor::visitBetween(BlockNode* node)
 {
 }
 
- void ABSASTVisitor::visitPost(JumpNode* node)
-{
-}
-
  void ABSASTVisitor::visitPost(LoopNode* node)
 {
 }
@@ -152,6 +156,14 @@ void ABSASTVisitor::visitBetween(BlockNode* node)
 }
 
  void ABSASTVisitor::visitPost(AssignNode* node)
+{
+}
+
+void ABSASTVisitor::visitPost(BreakNode* node)
+{
+}
+
+void ABSASTVisitor::visitPost(ContinueNode* node)
 {
 }
 

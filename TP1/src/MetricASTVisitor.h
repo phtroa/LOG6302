@@ -12,7 +12,8 @@ public:
   ~MetricASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
-    virtual void visitPre(JumpNode* node);
+    virtual void visitPre(BreakNode* node);
+    virtual void visitPre(ContinueNode* node);
     virtual void visitPre(LoopNode* node);
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(VarNode* node);

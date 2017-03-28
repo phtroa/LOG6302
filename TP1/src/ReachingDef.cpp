@@ -6,7 +6,6 @@ ReachingDef::ReachingDef()
 
 ReachingDef::~ReachingDef()
 {
-
 }
 
 void ReachingDef::compute(CFG* cfg)

@@ -50,18 +50,24 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   spacePadding++;
 }
 
- void PrettyPrintASTVisitor::visitPre(JumpNode* node)
+ void PrettyPrintASTVisitor::visitPre(BreakNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
-  std::cout << "JumpNode" << std::endl;
+  std::cout << "BreakNode" << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(ContinueNode* node)
+{
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "ContinueNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(LoopNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "LoopNode" << std::endl;
@@ -70,7 +76,6 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 
  void PrettyPrintASTVisitor::visitPre(MethodNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "MethodNode : " << node->getMethodName() << std::endl;
@@ -87,7 +92,6 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 
  void PrettyPrintASTVisitor::visitPre(ProgramNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "ProgramNode" << std::endl;
@@ -96,7 +100,6 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 
  void PrettyPrintASTVisitor::visitPre(VarNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "VarNode : " << node->getVarName() << std::endl;
@@ -105,7 +108,6 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 
  void PrettyPrintASTVisitor::visitPre(AttributeNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "AttNode : " << node->getAttName() << node->getType().getType() << std::endl;
@@ -123,7 +125,6 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
 
  void PrettyPrintASTVisitor::visitPre(ReturnNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "ReturnNode" << std::endl;
@@ -132,7 +133,6 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
 
  void PrettyPrintASTVisitor::visitPre(BlockNode* node)
 {
-
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "BlockNode" << std::endl;
@@ -141,49 +141,46 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
 
  void PrettyPrintASTVisitor::visitPost(ClassNode* node)
 {
-
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(CondNode* node)
 {
-
   spacePadding--;
 }
 
- void PrettyPrintASTVisitor::visitPost(JumpNode* node)
+ void PrettyPrintASTVisitor::visitPost(BreakNode* node)
 {
+  spacePadding--;
+}
 
+ void PrettyPrintASTVisitor::visitPost(ContinueNode* node)
+{
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(LoopNode* node)
 {
-
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(MethodNode* node)
 {
-
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(NamespaceNode* node)
 {
-
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(ProgramNode* node)
 {
-
   spacePadding--;
 }
 
  void PrettyPrintASTVisitor::visitPost(VarNode* node)
 {
-
   spacePadding--;
 }
 

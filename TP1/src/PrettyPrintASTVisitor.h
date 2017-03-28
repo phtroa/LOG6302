@@ -12,7 +12,8 @@ public:
   ~PrettyPrintASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
-    virtual void visitPre(JumpNode* node);
+    virtual void visitPre(BreakNode* node);
+    virtual void visitPre(ContinueNode* node);
     virtual void visitPre(LoopNode* node);
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(ProgramNode* node);
@@ -25,7 +26,8 @@ public:
 
     virtual void visitPost(ClassNode* node);
     virtual void visitPost(CondNode* node);
-    virtual void visitPost(JumpNode* node);
+    virtual void visitPost(BreakNode* node);
+    virtual void visitPost(ContinueNode* node);
     virtual void visitPost(LoopNode* node);
     virtual void visitPost(MethodNode* node);
     virtual void visitPost(ProgramNode* node);

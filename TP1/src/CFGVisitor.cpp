@@ -3,7 +3,8 @@
 #include "AssignNode.h"
 #include "ClassNode.h"
 #include "CondNode.h"
-#include "JumpNode.h"
+#include "BreakNode.h"
+#include "ContinueNode.h"
 #include "LoopNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
@@ -89,11 +90,6 @@ void CFGVisitor::visitPre(CondNode* node)
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
   currID = condID;
-  //creation des noeuds
-  // std::shared_ptr<CFGTreeNode> cond(new CFGCondNode(beginID, endID, condID));
-  // currNode->addChild(cond);
-  // cond->setParent(currNode);
-  // currNode = cond;
   std::cout << "Fin visitPre cond" + std::to_string(beginID) << std::endl;
 }
 
@@ -113,41 +109,41 @@ void CFGVisitor::visitBetween(CondNode* node)
 
  void CFGVisitor::visitPre(BlockNode* node)
 {
-  //creation des noeuds
-  // std::shared_ptr<CFGTreeNode> block(new CFGBlockNode());
-  // block->setParent(currNode);
-  // currNode->addChild(block);
-  // currNode = block;
 }
 
-void CFGVisitor::visitPre(JumpNode* node)
+void CFGVisitor::visitPre(BreakNode* node)
 {
   std::cout << "in visitPre Jump" << std::endl;
 
   int id = localID;
   int breakID = loopStackEnd.back();
+  CFGNode* breakNode = new CFGNode(localID++,"Break", node->getLineNumber());
+  graph.back().addNode(breakNode);
+  graph.back().addVertice(id, breakID);
+  graph.back().addReverseVertice(breakID, id);
+  graph.back().addVertice(currID, id);
+  graph.back().addReverseVertice(id, currID);
+
+  needlink = false;
+
+  std::cout << "Fin visitPre Jump" << std::endl;
+}
+
+void CFGVisitor::visitPre(ContinueNode* node)
+{
+  std::cout << "in visitPre Jump" << std::endl;
+
+  int id = localID;
   int ContinueID = loopStackEnd.back();
-  if (true) { //TODO change this
-    CFGNode* breakNode = new CFGNode(localID++,"Break", node->getLineNumber());
-    graph.back().addNode(breakNode);
-    graph.back().addVertice(id, breakID);
-    graph.back().addReverseVertice(breakID, id);
-  }
-  else {
-    CFGNode* continueNode = new CFGNode(localID++,"Continue", node->getLineNumber());
-    graph.back().addNode(continueNode);
-    graph.back().addVertice(id, ContinueID);
-    graph.back().addReverseVertice(ContinueID, id);
-  }
+  CFGNode* continueNode = new CFGNode(localID++,"Continue", node->getLineNumber());
+  graph.back().addNode(continueNode);
+  graph.back().addVertice(id, ContinueID);
+  graph.back().addReverseVertice(ContinueID, id);
 
   graph.back().addVertice(currID, id);
   graph.back().addReverseVertice(id, currID);
 
   needlink = false;
-  // std::shared_ptr<CFGTreeNode> jump(new CFGBreakNode(id, breakID));
-  // currNode->addChild(jump);
-  // jump->setParent(currNode);
-  // currNode = jump;
 
   std::cout << "Fin visitPre Jump" << std::endl;
 }
@@ -179,10 +175,6 @@ void CFGVisitor::visitPre(LoopNode* node)
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
 
-  // std::shared_ptr<CFGTreeNode> loop(new CFGLoopNode(beginID, endID, condID));
-  // currNode->addChild(loop);
-  // loop->setParent(currNode);
-  // currNode = loop;
   std::cout << "Fin visitPre Loop" << std::endl;
 }
 
@@ -211,10 +203,6 @@ void CFGVisitor::visitPre(MethodNode* node)
   stackBegin.push_back(entryID);
   stackEnd.push_back(exitID);
 
-  // std::shared_ptr<CFGTreeNode> method(new CFGMethodNode(entryID, exitID));
-  // tree = method;
-  // currNode = tree;
-
   std::cout << "Fin visitPre Method" << std::endl;
 }
 
@@ -232,10 +220,6 @@ void CFGVisitor::visitPre(ReturnNode* node)
   graph.back().addReverseVertice(exitID, beginID);
 
   needlink = false;
-  // std::shared_ptr<CFGTreeNode> retNode(new CFGReturnNode(beginID, exitID));
-  // currNode->addChild(retNode);
-  // retNode->setParent(currNode);
-  // currNode = retNode;
 
   std::cout << "Fin visitPre return" << std::endl;
 }
@@ -262,9 +246,6 @@ void CFGVisitor::visitPost(VarNode* node)
 void CFGVisitor::visitPost(MethodNode* node)
 {
   std::cout << "in visitPost Method" << std::endl;
-  //CFG* currGraph = &(graph.back());
-  //CFGTreeVisitor visitor(currGraph);
-  //tree->acceptVisitor(&visitor);
   int endID = stackEnd.back();
   if (needlink) {
     graph.back().addVertice(currID, endID);
@@ -299,11 +280,6 @@ void CFGVisitor::visitPost(CondNode* node)
   std::cout << "in visitPost cond" << std::endl;
 }
 
-void CFGVisitor::visitPost(JumpNode* node)
-{
-  //currNode = currNode->getParent();
-}
-
 void CFGVisitor::visitPost(LoopNode* node)
 {
   loopStackBegin.pop_back();
@@ -318,7 +294,6 @@ void CFGVisitor::visitPost(LoopNode* node)
   }
   needlink = true;
   currID = endid;
-  //currNode = currNode->getParent();
 }
 
 void CFGVisitor::visitPost(ProgramNode* node)
@@ -327,12 +302,10 @@ void CFGVisitor::visitPost(ProgramNode* node)
 
  void CFGVisitor::visitPost(BlockNode* node)
 {
-  //currNode = currNode->getParent();
 }
 
  void CFGVisitor::visitPost(ReturnNode* node)
 {
-  //currNode = currNode->getParent();
 }
 
 
