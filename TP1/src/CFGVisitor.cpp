@@ -5,7 +5,8 @@
 #include "CondNode.h"
 #include "BreakNode.h"
 #include "ContinueNode.h"
-#include "LoopNode.h"
+#include "ForNode.h"
+#include "WhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -148,7 +149,37 @@ void CFGVisitor::visitPre(ContinueNode* node)
   std::cout << "Fin visitPre Jump" << std::endl;
 }
 
-void CFGVisitor::visitPre(LoopNode* node)
+void CFGVisitor::visitPre(WhileNode* node)
+{
+  std::cout << "in visitPre Loop" << std::endl;
+
+  int beginID = localID;
+  CFGNode* loopEntry = new CFGNode(localID++,"LoopBegin", node->getLineNumber());
+  graph.back().addNode(loopEntry);
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+  int condID = localID;
+  CFGNode* CondNode = new CFGNode(localID++,"LoopCondition", node->getLineNumber());
+  graph.back().addNode(CondNode);
+  int endID = localID;
+  CFGNode* loopEnd = new CFGNode(localID++,"LoopEnd", node->getLineNumber());
+  graph.back().addNode(loopEnd);
+  loopStackBegin.push_back(beginID);
+  loopStackEnd.push_back(endID);
+
+  graph.back().addVertice(beginID, condID);
+  graph.back().addReverseVertice(condID, beginID);
+  graph.back().addVertice(condID, endID);
+  graph.back().addReverseVertice(endID, condID);
+  currID = condID;
+
+  stackBegin.push_back(condID);
+  stackEnd.push_back(endID);
+
+  std::cout << "Fin visitPre Loop" << std::endl;
+}
+
+void CFGVisitor::visitPre(ForNode* node)
 {
   std::cout << "in visitPre Loop" << std::endl;
 
@@ -280,7 +311,23 @@ void CFGVisitor::visitPost(CondNode* node)
   std::cout << "in visitPost cond" << std::endl;
 }
 
-void CFGVisitor::visitPost(LoopNode* node)
+void CFGVisitor::visitPost(WhileNode* node)
+{
+  loopStackBegin.pop_back();
+  loopStackEnd.pop_back();
+  int endid = stackEnd.back();
+  int beginID = stackBegin.back();
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  if (needlink) {
+    graph.back().addVertice(currID, beginID);
+    graph.back().addReverseVertice(beginID, currID);
+  }
+  needlink = true;
+  currID = endid;
+}
+
+void CFGVisitor::visitPost(ForNode* node)
 {
   loopStackBegin.pop_back();
   loopStackEnd.pop_back();

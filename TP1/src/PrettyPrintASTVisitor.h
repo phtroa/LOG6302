@@ -14,7 +14,8 @@ public:
     virtual void visitPre(CondNode* node);
     virtual void visitPre(BreakNode* node);
     virtual void visitPre(ContinueNode* node);
-    virtual void visitPre(LoopNode* node);
+    virtual void visitPre(WhileNode* node);
+    virtual void visitPre(ForNode* node);
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(ProgramNode* node);
     virtual void visitPre(VarNode* node);
@@ -28,7 +29,8 @@ public:
     virtual void visitPost(CondNode* node);
     virtual void visitPost(BreakNode* node);
     virtual void visitPost(ContinueNode* node);
-    virtual void visitPost(LoopNode* node);
+    virtual void visitPost(WhileNode* node);
+    virtual void visitPost(ForNode* node);
     virtual void visitPost(MethodNode* node);
     virtual void visitPost(ProgramNode* node);
     virtual void visitPost(VarNode* node);
@@ -39,6 +41,6 @@ public:
     virtual void visitPost(BlockNode* node);
 
 private:
-  void writeSpaces(int nb); //writes nb space on the screen
+  void writeSpaces(int nb); //writes nb spaces on the screen
   int spacePadding;
 };

@@ -2,8 +2,10 @@
 
 #include "ClassNode.h"
 #include "CondNode.h"
-#include "JumpNode.h"
-#include "LoopNode.h"
+#include "BreakNode.h"
+#include "ContinueNode.h"
+#include "ForNode.h"
+#include "WhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -28,7 +30,7 @@ MetricASTVisitor::~MetricASTVisitor()
   oldClassName = className;
   oldFileName = fileName;
 
-  //settting current names
+  //setting current names
   className = node->getClassName();
   fileName = node->getFilePath();
 }
@@ -48,7 +50,12 @@ MetricASTVisitor::~MetricASTVisitor()
   nbJump++;
 }
 
- void MetricASTVisitor::visitPre(LoopNode* node)
+ void MetricASTVisitor::visitPre(ForNode* node)
+{
+  nbLoop++;
+}
+
+ void MetricASTVisitor::visitPre(WhileNode* node)
 {
   nbLoop++;
 }

@@ -5,7 +5,8 @@
 #include "ClassNode.h"
 #include "CondNode.h"
 #include "JumpNode.h"
-#include "LoopNode.h"
+#include "ForNode.h"
+#include "WhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -66,11 +67,19 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   spacePadding++;
 }
 
- void PrettyPrintASTVisitor::visitPre(LoopNode* node)
+ void PrettyPrintASTVisitor::visitPre(ForNode* node)
 {
   writeSpaces(spacePadding);
   std::cout << "+";
-  std::cout << "LoopNode" << std::endl;
+  std::cout << "ForNode" << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(WhileNode* node)
+{
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "WhileNode" << std::endl;
   spacePadding++;
 }
 
@@ -159,7 +168,12 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
   spacePadding--;
 }
 
- void PrettyPrintASTVisitor::visitPost(LoopNode* node)
+ void PrettyPrintASTVisitor::visitPost(WhileNode* node)
+{
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(ForNode* node)
 {
   spacePadding--;
 }

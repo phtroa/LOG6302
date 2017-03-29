@@ -1,5 +1,7 @@
 #include "WhileNode.h"
 
+#include "ABSASTVisitor.h"
+
 WhileNode::WhileNode(int line) : LoopNode(line)
 {}
 

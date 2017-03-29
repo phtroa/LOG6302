@@ -29,7 +29,8 @@ public:
     virtual void visitPre(CondNode* node);
     virtual void visitPre(BreakNode* node);
     virtual void visitPre(ContinueNode* node);
-    virtual void visitPre(LoopNode* node);
+    virtual void visitPre(WhileNode* node);
+    virtual void visitPre(ForNode* node);
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(BlockNode* node);
     virtual void visitPre(ReturnNode* node);
@@ -40,7 +41,8 @@ public:
     virtual void visitPost(AssignNode* node);
     virtual void visitPost(VarNode* node);
     virtual void visitPost(CondNode* node);
-    virtual void visitPost(LoopNode* node);
+    virtual void visitPost(WhileNode* node);
+    virtual void visitPost(ForNode* node);
     virtual void visitPost(ProgramNode* node);
     virtual void visitPost(BlockNode* node);
     virtual void visitPost(ReturnNode* node);
