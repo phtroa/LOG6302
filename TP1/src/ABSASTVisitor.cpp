@@ -33,6 +33,10 @@ void ABSASTVisitor::visitPre(WhileNode* node)
 {
 }
 
+void ABSASTVisitor::visitPre(DoWhileNode* node)
+{
+}
+
  void ABSASTVisitor::visitPre(MethodNode* node)
 {
 }
@@ -95,6 +99,10 @@ void ABSASTVisitor::visitBetween(WhileNode* node)
 {
 }
 
+void ABSASTVisitor::visitBetween(DoWhileNode* node)
+{
+}
+
 void ABSASTVisitor::visitBetween(MethodNode* node)
 {
 }
@@ -144,6 +152,10 @@ void ABSASTVisitor::visitPost(ForNode* node)
 }
 
 void ABSASTVisitor::visitPost(WhileNode* node)
+{
+}
+
+void ABSASTVisitor::visitPost(DoWhileNode* node)
 {
 }
 

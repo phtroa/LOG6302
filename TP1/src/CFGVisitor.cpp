@@ -7,6 +7,7 @@
 #include "ContinueNode.h"
 #include "ForNode.h"
 #include "WhileNode.h"
+#include "DoWhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -179,6 +180,36 @@ void CFGVisitor::visitPre(WhileNode* node)
   std::cout << "Fin visitPre Loop" << std::endl;
 }
 
+void CFGVisitor::visitPre(DoWhileNode* node)
+{
+  std::cout << "in visitPre Loop" << std::endl;
+
+  int beginID = localID;
+  CFGNode* loopEntry = new CFGNode(localID++,"LoopBegin", node->getLineNumber());
+  graph.back().addNode(loopEntry);
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+  int condID = localID;
+  CFGNode* CondNode = new CFGNode(localID++,"LoopCondition", node->getLineNumber());
+  graph.back().addNode(CondNode);
+  int endID = localID;
+  CFGNode* loopEnd = new CFGNode(localID++,"LoopEnd", node->getLineNumber());
+  graph.back().addNode(loopEnd);
+  loopStackBegin.push_back(beginID);
+  loopStackEnd.push_back(endID);
+
+  graph.back().addVertice(beginID, condID);
+  graph.back().addReverseVertice(condID, beginID);
+  graph.back().addVertice(condID, endID);
+  graph.back().addReverseVertice(endID, condID);
+  currID = condID;
+
+  stackBegin.push_back(condID);
+  stackEnd.push_back(endID);
+
+  std::cout << "Fin visitPre Loop" << std::endl;
+}
+
 void CFGVisitor::visitPre(ForNode* node)
 {
   std::cout << "in visitPre Loop" << std::endl;
@@ -285,6 +316,16 @@ void CFGVisitor::visitPost(MethodNode* node)
   needlink = true;
   stackBegin.pop_back();
   stackEnd.pop_back();
+  //TODO clean up
+  CFGNode* entryNode = new CFGNode(localID,"Entry System", 0);
+  graph.back().addNode(entryNode);
+  //link entry system to the Method entry
+  graph.back().addVertice(localID, graph.back().getEntry());
+  graph.back().addReverseVertice(graph.back().getEntry(), localID);
+  //link entry system to the Method exit
+  graph.back().addVertice(localID, graph.back().getExit());
+  graph.back().addReverseVertice(graph.back().getExit(), localID);
+
 
   localID = 0;
   entryID = 0;
@@ -312,6 +353,22 @@ void CFGVisitor::visitPost(CondNode* node)
 }
 
 void CFGVisitor::visitPost(WhileNode* node)
+{
+  loopStackBegin.pop_back();
+  loopStackEnd.pop_back();
+  int endid = stackEnd.back();
+  int beginID = stackBegin.back();
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  if (needlink) {
+    graph.back().addVertice(currID, beginID);
+    graph.back().addReverseVertice(beginID, currID);
+  }
+  needlink = true;
+  currID = endid;
+}
+
+void CFGVisitor::visitPost(DoWhileNode* node)
 {
   loopStackBegin.pop_back();
   loopStackEnd.pop_back();

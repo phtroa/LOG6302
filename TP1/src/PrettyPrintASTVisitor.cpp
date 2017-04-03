@@ -7,6 +7,7 @@
 #include "JumpNode.h"
 #include "ForNode.h"
 #include "WhileNode.h"
+#include "DoWhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -80,6 +81,14 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   writeSpaces(spacePadding);
   std::cout << "+";
   std::cout << "WhileNode" << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(DoWhileNode* node)
+{
+  writeSpaces(spacePadding);
+  std::cout << "+";
+  std::cout << "DoWhileNode" << std::endl;
   spacePadding++;
 }
 
@@ -169,6 +178,11 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
 }
 
  void PrettyPrintASTVisitor::visitPost(WhileNode* node)
+{
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(DoWhileNode* node)
 {
   spacePadding--;
 }

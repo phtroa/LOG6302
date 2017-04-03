@@ -572,29 +572,6 @@ bool Visitor::TraverseUnaryPreDec(clang::UnaryOperator* Stmt) {
 
 }
 
-// bool Visitor::TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S) {
-//   if (!inMethod || !S->isAssignmentOp()) {
-//     return true;
-//   }
-//
-//   std::cout<<"[LOG6302] Traverse d'une assignation : " << std::endl;
-//
-//   auto lhs = dyn_cast_or_null<DeclRefExpr>(S->getLHS());
-//   std::string varName;
-//   if (lhs != nullptr) {
-//     varName = lhs->getNameAsString();
-//   }
-//   std::shared_ptr<ABSNode> myNode(new AssignNode(varName));
-//   myAst->linkParentToChild(currNode, myNode);
-//
-//   currNode = myNode;
-//   clang::RecursiveASTVisitor<Visitor>::TraverseCXXOperatorCallExpr(S);
-//   currNode = myNode->getParent();
-//
-//   std::cout<<"[LOG6302] Fin Traverse d'une assignation : " << std::endl;
-//
-//   return true;
-// }
 /**********************/
 /* switch traverse    */
 /**********************/
@@ -765,6 +742,32 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" while\"\n";
+
+  return true;
+}
+
+bool Visitor::TraverseDoStmt(clang::DoStmt *S) {
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'une boucle : Dowhile("<<GetStatementString(S->getCond())<<")\n"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  std::shared_ptr<ABSNode> myNode(new DoWhileNode(line_number));
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseDoStmt(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" Dowhile\"\n";
 
   return true;
 }

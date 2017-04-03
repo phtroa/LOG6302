@@ -11,6 +11,7 @@ class BlockNode;
 class BreakNode;
 class ContinueNode;
 class WhileNode;
+class DoWhileNode;
 class ForNode;
 class MethodNode;
 class NamespaceNode;
@@ -22,7 +23,7 @@ class VarNode;
 //all the *Pre method are called before going into
 //the children the *Post are called once all the chldren have been
 //encoutered
-
+//between method are called between two nodes
 class ABSASTVisitor {
 public:
   virtual ~ABSASTVisitor() = 0;
@@ -32,6 +33,7 @@ public:
   virtual void visitPre(BreakNode* node);
   virtual void visitPre(ContinueNode* node);
   virtual void visitPre(WhileNode* node);
+  virtual void visitPre(DoWhileNode* node);
   virtual void visitPre(ForNode* node);
   virtual void visitPre(MethodNode* node);
   virtual void visitPre(ProgramNode* node);
@@ -48,6 +50,7 @@ public:
   virtual void visitBetween(BreakNode* node);
   virtual void visitBetween(ContinueNode* node);
   virtual void visitBetween(WhileNode* node);
+  virtual void visitBetween(DoWhileNode* node);
   virtual void visitBetween(ForNode* node);
   virtual void visitBetween(MethodNode* node);
   virtual void visitBetween(ProgramNode* node);
@@ -64,6 +67,7 @@ public:
   virtual void visitPost(BreakNode* node);
   virtual void visitPost(ContinueNode* node);
   virtual void visitPost(WhileNode* node);
+  virtual void visitPost(DoWhileNode* node);
   virtual void visitPost(ForNode* node);
   virtual void visitPost(MethodNode* node);
   virtual void visitPost(ProgramNode* node);

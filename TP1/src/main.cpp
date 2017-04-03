@@ -14,6 +14,7 @@
 #include "PrettyPrintASTVisitor.h"
 #include "UMLASTVisitor.h"
 #include "CFGVisitor.h"
+#include "CDGraphBuilder.h"
 #include "Dominator.h"
 #include "PostDominator.h"
 #include "ReachingDef.h"
@@ -155,6 +156,16 @@ int main(int argc, const char **argv) {
   for (auto it = graph.begin(); it != graph.end(); it++) {
     rea.compute(&(*it));
     std::cout << rea << std::endl;
+  }
+
+  std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+  CDGraphBuilder builder;
+  CFG cdGraph("myCDGraph");
+  for (auto it = graph.begin(); it != graph.end(); it++) {
+    builder.build(pdom.compute(&(*it)),*it, cdGraph);
+    std::cout << " digraph G {" << std::endl;
+    cdGraph.dump(std::cout);
+    std::cout << "}" << std::endl;
   }
 
   return ret;

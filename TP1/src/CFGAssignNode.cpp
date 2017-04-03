@@ -16,6 +16,11 @@ std::string CFGAssignNode::getLValueName() const
   return varName;
 }
 
+CFGNode* CFGAssignNode::clone() const
+{
+  return new CFGAssignNode(*this);
+}
+
 void CFGAssignNode::dump(std::ostream& o) const
 {
   std::string idInGraph;

@@ -21,6 +21,11 @@ std::string CFGNode::getNodeType() const
   return nodeType;
 }
 
+CFGNode* CFGNode::clone() const
+{
+  return new CFGNode(*this);
+}
+
 bool CFGNode::isAssignement() const
 {
   return false;

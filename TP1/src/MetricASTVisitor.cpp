@@ -6,6 +6,7 @@
 #include "ContinueNode.h"
 #include "ForNode.h"
 #include "WhileNode.h"
+#include "DoWhileNode.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
 #include "ProgramNode.h"
@@ -56,6 +57,11 @@ MetricASTVisitor::~MetricASTVisitor()
 }
 
  void MetricASTVisitor::visitPre(WhileNode* node)
+{
+  nbLoop++;
+}
+
+ void MetricASTVisitor::visitPre(DoWhileNode* node)
 {
   nbLoop++;
 }

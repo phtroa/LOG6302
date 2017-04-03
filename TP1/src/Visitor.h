@@ -22,6 +22,7 @@
 #include "LoopNode.h"
 #include "ForNode.h"
 #include "WhileNode.h"
+#include "DoWhileNode.h"
 #include "MetaTree.h"
 #include "MethodNode.h"
 #include "NamespaceNode.h"
@@ -53,7 +54,6 @@ public:
   bool TraverseUnaryPostDec(clang::UnaryOperator* Stmt);
   bool TraverseUnaryPreInc(clang::UnaryOperator* Stmt);
   bool TraverseUnaryPreDec(clang::UnaryOperator* Stmt);
-  //bool TraverseCXXOperatorCallExpr(clang::CXXOperatorCallExpr *S);
   bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);
   bool TraverseCaseStmt(clang::CaseStmt *S);
@@ -61,6 +61,7 @@ public:
   bool TraverseContinueStmt(clang::ContinueStmt *S);
   bool TraverseForStmt(clang::ForStmt *S);
   bool TraverseWhileStmt(clang::WhileStmt *S);
+  bool TraverseDoStmt(clang::DoStmt *S);
   bool TraverseReturnStmt(clang::ReturnStmt *S);
   bool TraverseNamespaceDecl(clang::NamespaceDecl *D);
 

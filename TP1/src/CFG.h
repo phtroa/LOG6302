@@ -9,6 +9,7 @@
 class CFG
 {
   public:
+    CFG(const std::string& id);
     CFG(const std::string& id, int ent, int ext);
     ~CFG();
     void dump(std::ostream& o) const;

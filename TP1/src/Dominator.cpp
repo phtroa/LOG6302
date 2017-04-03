@@ -39,10 +39,7 @@ void Dominator::makeDFSTree()
     if (visited.find(top) != visited.end()) {
       continue;
     }
-
-    std::cout << "Avant successeur " << top << " size " << cfg->getSize() << std::endl;
     for (auto it = (getSuccessors(top)).cbegin(); it != (getSuccessors(top)).cend(); it++) {
-      std::cout << "Apres successeur " << top << ":" << *it << std::endl;
       if (visited.find(*it) == visited.end() && *it != top) {
         stack.push_back(*it);
         domTreeParent[*it] = top;

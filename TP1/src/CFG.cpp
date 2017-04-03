@@ -1,5 +1,10 @@
 #include "CFG.h"
 
+
+CFG::CFG(const std::string& id) : myID(id), entry(0), exit(0)
+{
+}
+
 CFG::CFG(const std::string& id, int ent, int ext) : myID(id), entry(ent), exit(ext)
 {
 }
@@ -50,7 +55,6 @@ CFGNode* CFG::getNode(int id)
 {
     return nodes[id];
 }
-
 
 const std::vector<int>& CFG::getSuccessors(int id) const
 {

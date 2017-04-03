@@ -14,6 +14,7 @@ class CFGNode
     virtual std::string getLValueName() const;
     std::string getNodeType() const;
     virtual void dump(std::ostream& o) const;
+    virtual CFGNode* clone() const;
   private:
     int myID;
     std::string nodeType;

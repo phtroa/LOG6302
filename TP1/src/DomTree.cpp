@@ -5,6 +5,44 @@ DomTree::DomTree(const std::vector<CFGNode*>& nodes, int* links, int size) : mNo
   for (size_t i = 0; i < size; i++) {
     mLinks.push_back(links[i]);
   }
+
+}
+
+bool DomTree::inS(int x, int y) const
+{
+  if (x == y ) {
+    return false;
+  }
+
+  int dom = mLinks[x];
+  while (dom != -1) {
+    if (dom == y) {
+      return false;
+    }
+    dom = mLinks[dom];
+  }
+
+  return true;
+}
+
+std::vector<CFGNode*>& DomTree::getNodes()
+{
+  return mNodes;
+}
+
+int DomTree::getSize() const
+{
+  return mNodes.size();
+}
+
+CFGNode* DomTree::getNode(int i)
+{
+  return mNodes[i];
+}
+
+int DomTree::getiDom(int x) const
+{
+  return mLinks[x];
 }
 
 void DomTree::dump(std::ostream& o) const

@@ -10,6 +10,7 @@ class CFGAssignNode : public CFGNode
     virtual bool isAssignement() const;
     virtual std::string getLValueName() const;
     virtual void dump(std::ostream& o) const;
+    virtual CFGNode* clone() const;
   private:
     std::string varName;
 };
