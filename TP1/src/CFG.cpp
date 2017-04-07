@@ -9,13 +9,6 @@ CFG::CFG(const std::string& id, int ent, int ext) : myID(id), entry(ent), exit(e
 {
 }
 
-CFG::~CFG()
-{
-  for (auto it = nodes.begin(); it != nodes.end(); it++) {
-    delete *it;
-  }
-}
-
 void CFG::dump(std::ostream& o) const
 {
   std::string idInGraph;
@@ -34,7 +27,7 @@ void CFG::dump(std::ostream& o) const
   }
 }
 
-void CFG::addNode(CFGNode* node)
+void CFG::addNode(std::shared_ptr<CFGNode> node)
 {
   nodes.push_back(node);
   vertices.push_back(std::vector<int>());
@@ -51,7 +44,7 @@ void CFG::addReverseVertice(int v1, int v2)
   reverseVertices[v1].push_back(v2);
 }
 
-CFGNode* CFG::getNode(int id)
+std::shared_ptr<CFGNode> CFG::getNode(int id) const
 {
     return nodes[id];
 }
@@ -91,7 +84,16 @@ int CFG::getSize() const
   return nodes.size();
 }
 
-const std::vector<CFGNode*>& CFG::getNodes() const
+const std::vector<std::shared_ptr<CFGNode>>& CFG::getNodes() const
 {
   return nodes;
+}
+
+const std::vector<std::vector<int>>& CFG::getVertices() const
+{
+  return vertices;
+}
+
+const std::vector<std::vector<int>>& CFG::getReverseVertices() const {
+  return reverseVertices;
 }

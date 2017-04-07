@@ -42,3 +42,13 @@ int ABSNode::getNbChildren() const {
 int ABSNode::getLineNumber() const {
   return line_number;
 }
+
+VarInStament ABSNode::getVars() const
+{
+  return vars;
+}
+
+void ABSNode::setVars(const VarInStament & vars)
+{
+  this->vars = vars;
+}

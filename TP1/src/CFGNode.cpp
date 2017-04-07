@@ -36,12 +36,27 @@ std::string CFGNode::getLValueName() const
   return "";
 }
 
+VarInStament CFGNode::getVars() const
+{
+  return vars;
+}
+
+void CFGNode::setVars(const VarInStament & vars)
+{
+  this->vars = vars;
+}
+
 void CFGNode::dump(std::ostream& o) const
 {
   std::string idInGraph;
   idInGraph = std::to_string(getId());
   o << idInGraph << " [" << std::endl;
-  o << "label=\"" << getNodeType() << " at line : " << getLineNumber() << "\"" << std::endl;
+  o << "label=\"" << getNodeType() << " at line : " << getLineNumber() << std::endl;
+  o << "Var used : ";
+  for (int i  = 0; i < vars.getNumValues(); i ++) {
+    o << " " << vars.getValue(i) << " ";
+  }
+  o << "\"" << std::endl;
   o << "]" << std::endl;
 }
 

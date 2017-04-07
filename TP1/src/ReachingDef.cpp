@@ -1,15 +1,26 @@
 #include "ReachingDef.h"
 
-ReachingDef::ReachingDef()
+ReachingDef::ReachingDef() : in(nullptr), out(nullptr), gen(nullptr), kill(nullptr)
 {
 }
 
 ReachingDef::~ReachingDef()
 {
+  delete [] in;
+  delete [] out;
+  delete [] gen;
+  delete [] kill;
 }
 
-void ReachingDef::compute(CFG* cfg)
+std::pair<std::vector<std::set<int>>,std::map<std::string,std::set<int>>> ReachingDef::compute(CFG* cfg)
 {
+
+  varNameToSet.clear();
+  delete [] in;
+  delete [] out;
+  delete [] gen;
+  delete [] kill;
+
   this->cfg = cfg;
   in = new std::set<int>[cfg->getSize()];
   out = new std::set<int>[cfg->getSize()];
@@ -22,11 +33,11 @@ void ReachingDef::compute(CFG* cfg)
 
   iterate();
 
-  varNameToSet.clear();
-  delete [] in;
-  delete [] out;
-  delete [] gen;
-  delete [] kill;
+  return std::pair<std::vector<std::set<int>>,
+  std::map<std::string,std::set<int>>>(
+    std::vector<std::set<int>>(in, in + cfg->getSize()),
+    varNameToSet
+  );
 }
 
 void ReachingDef::iterate()
@@ -65,7 +76,7 @@ void ReachingDef::iterate()
 
 void ReachingDef::fillMap()
 {
-  const std::vector<CFGNode*>&  nodes = cfg->getNodes();
+  const std::vector<std::shared_ptr<CFGNode>>&  nodes = cfg->getNodes();
   for (int i = 0; i < cfg->getSize(); i++) {
     if (nodes[i]->isAssignement()) {
       varNameToSet[nodes[i]->getLValueName()].insert(nodes[i]->getLineNumber());
@@ -75,7 +86,7 @@ void ReachingDef::fillMap()
 
 void ReachingDef::fillGen()
 {
-  const std::vector<CFGNode*>&  nodes = cfg->getNodes();
+  const std::vector<std::shared_ptr<CFGNode>>&  nodes = cfg->getNodes();
   for (int i = 0; i < cfg->getSize(); i++) {
     if (nodes[i]->isAssignement()) {
       gen[i].insert(nodes[i]->getLineNumber());
@@ -86,7 +97,7 @@ void ReachingDef::fillGen()
 
 void ReachingDef::fillKill()
 {
-  const std::vector<CFGNode*>&  nodes = cfg->getNodes();
+  const std::vector<std::shared_ptr<CFGNode>>&  nodes = cfg->getNodes();
   for (int i = 0; i < cfg->getSize(); i++) {
     if (nodes[i]->isAssignement()) {
       kill[i] = varNameToSet[nodes[i]->getLValueName()];
@@ -96,7 +107,7 @@ void ReachingDef::fillKill()
 
 void ReachingDef::dump(std::ostream& o) const
 {
-  const std::vector<CFGNode*>&  nodes = cfg->getNodes();
+  const std::vector<std::shared_ptr<CFGNode>>&  nodes = cfg->getNodes();
   o  << "\\adjustbox{max width=\\textwidth}{%" << std::endl;
   o  << "\\begin{tabular}{|c|c|c|c|c|c|}" << std::endl;
   o  << "\\hline" << std::endl;

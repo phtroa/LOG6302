@@ -31,6 +31,8 @@
 #include "ReturnNode.h"
 #include "SwitchNode.h"
 
+#include "ValueExtractorVisitor.h"
+
 #include "InfoType.h"
 
 /**

@@ -11,10 +11,12 @@
 #include "Visitor.h"
 #include "MetaTree.h"
 #include "MetricASTVisitor.h"
+#include "MergeGraph.h"
 #include "PrettyPrintASTVisitor.h"
 #include "UMLASTVisitor.h"
 #include "CFGVisitor.h"
 #include "CDGraphBuilder.h"
+#include "DDGraphBuilder.h"
 #include "Dominator.h"
 #include "PostDominator.h"
 #include "ReachingDef.h"
@@ -138,14 +140,14 @@ int main(int argc, const char **argv) {
   myAst->acceptVisitor(&printCFG);
   printCFG.dump(std::cout);
 
-  std::cout << "----------------------------------------------------------------" << std::endl;
+  std::cout << "--------------------------------DOM-----------------------------" << std::endl;
   std::vector<CFG> graph = printCFG.getGraph();
   Dominator dom;
   for (auto it = graph.begin(); it != graph.end(); it++) {
     std::cout << *(dom.compute(&(*it))) << std::endl;
   }
 
-  std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PDOM~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
   PostDominator pdom;
   for (auto it = graph.begin(); it != graph.end(); it++) {
     std::cout << *(pdom.compute(&(*it))) << std::endl;
@@ -159,14 +161,34 @@ int main(int argc, const char **argv) {
   }
 
   std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-  CDGraphBuilder builder;
+  CDGraphBuilder cdbuilder;
   CFG cdGraph("myCDGraph");
   for (auto it = graph.begin(); it != graph.end(); it++) {
-    builder.build(pdom.compute(&(*it)),*it, cdGraph);
+    cdbuilder.build(pdom.compute(&(*it)),*it, cdGraph);
     std::cout << " digraph G {" << std::endl;
     cdGraph.dump(std::cout);
     std::cout << "}" << std::endl;
   }
+
+  std::cout << "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << std::endl;
+  DDGraphBuilder ddbuilder;
+  CFG ddGraph("myDDGraph");
+  for (auto it = graph.begin(); it != graph.end(); it++) {
+    ReachingDef reaTMP;
+    std::pair<std::vector<std::set<int>>, std::map<std::string,std::set<int>>> values = reaTMP.compute(&(*it));
+    ddbuilder.build(&(*it), ddGraph, values.first, values.second);
+    std::cout << " digraph G {" << std::endl;
+    ddGraph.dump(std::cout);
+    std::cout << "}" << std::endl;
+  }
+
+  std::cout << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
+  MergeGraph merger;
+  CFG pdGraph("PDG");
+  merger.merge(cdGraph, ddGraph, pdGraph);
+  std::cout << " digraph G {" << std::endl;
+  pdGraph.dump(std::cout);
+  std::cout << "}" << std::endl;
 
   return ret;
 }

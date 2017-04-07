@@ -1,6 +1,6 @@
 #include "DomTree.h"
 
-DomTree::DomTree(const std::vector<CFGNode*>& nodes, int* links, int size) : mNodes(nodes)
+DomTree::DomTree(const std::vector<std::shared_ptr<CFGNode>>& nodes, int* links, int size) : mNodes(nodes)
 {
   for (size_t i = 0; i < size; i++) {
     mLinks.push_back(links[i]);
@@ -25,7 +25,7 @@ bool DomTree::inS(int x, int y) const
   return true;
 }
 
-std::vector<CFGNode*>& DomTree::getNodes()
+std::vector<std::shared_ptr<CFGNode>>& DomTree::getNodes()
 {
   return mNodes;
 }
@@ -35,7 +35,7 @@ int DomTree::getSize() const
   return mNodes.size();
 }
 
-CFGNode* DomTree::getNode(int i)
+std::shared_ptr<CFGNode> DomTree::getNode(int i)
 {
   return mNodes[i];
 }

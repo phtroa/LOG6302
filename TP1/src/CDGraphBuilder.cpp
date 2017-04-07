@@ -3,8 +3,8 @@
 void CDGraphBuilder::build(std::shared_ptr<DomTree> pTree, const CFG& graphIN, CFG& graphOUT)
 {
   for (size_t i = 0; i < pTree->getSize(); i++) {
-    CFGNode* node = pTree->getNode(i);
-    graphOUT.addNode(node->clone());
+    std::shared_ptr<CFGNode> node = pTree->getNode(i);
+    graphOUT.addNode(node);
   }
   //we must compute S
   std::vector<std::pair<int,int>> S;

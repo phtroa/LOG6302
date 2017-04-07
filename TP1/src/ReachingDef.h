@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <utility>
 #include <vector>
 
 class ReachingDef
@@ -16,7 +17,7 @@ public:
   ReachingDef();
   ~ReachingDef();
 
-  void compute(CFG* cfg);
+std::pair<std::vector<std::set<int>>, std::map<std::string,std::set<int>>> compute(CFG* cfg);
   virtual void dump(std::ostream& o) const;
 private:
   void fillMap();

@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "VarInStament.h"
+
 class ABSASTVisitor;
 
 //represent a node in our ast
@@ -21,8 +23,11 @@ public:
   int getNbChildren() const;
   int getLineNumber() const;
 
+  VarInStament getVars() const;
+  void setVars(const VarInStament & vars);
 protected:
   std::vector<std::shared_ptr<ABSNode>> children;
   std::weak_ptr<ABSNode> parent;
   int line_number;
+  VarInStament vars;
 };

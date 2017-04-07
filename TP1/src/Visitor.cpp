@@ -387,6 +387,9 @@ bool Visitor::TraverseIfStmt(clang::IfStmt *S) {
   }
 
   std::shared_ptr<ABSNode> myNode(new IfNode(line_number));
+  ValueExtractorVisitor valVisitor;
+  valVisitor.TraverseStmt(S->getCond());
+  myNode->setVars(valVisitor.getAllVar());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -421,6 +424,9 @@ bool Visitor::TraverseBinAssign(clang::BinaryOperator *Bop) {
     varName = lhs->getDecl()->getNameAsString();
   }
   std::shared_ptr<ABSNode> myNode(new AssignNode(varName, line_number));
+  ValueExtractorVisitor valVisitor;
+  valVisitor.TraverseStmt(Bop->getRHS());
+  myNode->setVars(valVisitor.getAllVar());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -735,6 +741,9 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
   }
 
   std::shared_ptr<ABSNode> myNode(new WhileNode(line_number));
+  ValueExtractorVisitor valVisitor;
+  valVisitor.TraverseStmt(S->getCond());
+  myNode->setVars(valVisitor.getAllVar());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
@@ -790,6 +799,9 @@ bool Visitor::TraverseReturnStmt(clang::ReturnStmt *S) {
   }
 
   std::shared_ptr<ABSNode> myNode(new ReturnNode(line_number));
+  ValueExtractorVisitor valVisitor;
+  valVisitor.TraverseStmt(S);
+  myNode->setVars(valVisitor.getAllVar());
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
