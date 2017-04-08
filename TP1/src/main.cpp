@@ -8,18 +8,19 @@
 #include <clang/AST/ASTConsumer.h>
 #include <clang/Frontend/CompilerInstance.h>
 
-#include "Visitor.h"
-#include "MetaTree.h"
-#include "MetricASTVisitor.h"
-#include "MergeGraph.h"
-#include "PrettyPrintASTVisitor.h"
-#include "UMLASTVisitor.h"
 #include "CFGVisitor.h"
 #include "CDGraphBuilder.h"
 #include "DDGraphBuilder.h"
 #include "Dominator.h"
+#include "ForwardSlicer.h"
+#include "MetaTree.h"
+#include "MetricASTVisitor.h"
+#include "MergeGraph.h"
 #include "PostDominator.h"
+#include "PrettyPrintASTVisitor.h"
 #include "ReachingDef.h"
+#include "UMLASTVisitor.h"
+#include "Visitor.h"
 
 static unsigned int current_file = 0;
 static size_t nb_files = 0;
@@ -189,6 +190,15 @@ int main(int argc, const char **argv) {
   std::cout << " digraph G {" << std::endl;
   pdGraph.dump(std::cout);
   std::cout << "}" << std::endl;
+
+  std::cout << "----------------------------------------------------------------" << std::endl;
+  ForwardSlicer fSlicer;
+  CFG fSliceGraph("FSlice");
+  fSlicer.slice("nw", 12, pdGraph, fSliceGraph);
+  std::cout << " digraph G {" << std::endl;
+  fSliceGraph.dump(std::cout);
+  std::cout << "}" << std::endl;
+
 
   return ret;
 }

@@ -16,6 +16,11 @@ int CFGNode::getLineNumber() const
   return line_number;
 }
 
+void CFGNode::setId(int id)
+{
+  myID = id;
+}
+
 std::string CFGNode::getNodeType() const
 {
   return nodeType;

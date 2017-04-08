@@ -11,6 +11,7 @@ class CFGNode
   public:
     CFGNode(int id, const std::string& type, int line);
     int getId() const;
+    void setId(int id);
     int getLineNumber() const;
     virtual bool isAssignement() const;
     virtual std::string getLValueName() const;
