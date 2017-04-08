@@ -12,6 +12,7 @@ void ForwardSlicer::slice(const std::string& varName, int lineNumber,
   int currID = 0;
   int idInPdg = -1;
   std::set<int> visited;
+  std::set<int> isScheduled;
   std::map<int,int> oldIDToNewID;
   std::vector<int> nodesStack;
 
@@ -25,12 +26,16 @@ void ForwardSlicer::slice(const std::string& varName, int lineNumber,
   nodesStack.push_back(idOfVar);
   while (!nodesStack.empty()) {
     idInPdg = nodesStack.back();
-    visited.insert(idInPdg);
     nodesStack.pop_back();
+    if (visited.find(idInPdg) != visited.end()) {
+      continue;
+    }
+    visited.insert(idInPdg);
 
     const std::vector<int>& sucessors = getSuccessors(pdGraph, idInPdg);
     for (auto it = sucessors.cbegin(); it != sucessors.cend(); it++) {
 
+      //we create a node only if it doesn't already exist
       if (oldIDToNewID.find(*it) == oldIDToNewID.end()) {
         node = std::shared_ptr<CFGNode>(pdGraph.getNode(*it)->clone());
         node->setId(currID);
@@ -42,8 +47,9 @@ void ForwardSlicer::slice(const std::string& varName, int lineNumber,
       sliceOUT.addVertice(oldIDToNewID[idInPdg], oldIDToNewID[*it]);
       sliceOUT.addReverseVertice(oldIDToNewID[*it], oldIDToNewID[idInPdg]);
 
-      if (visited.find(*it) == visited.end()) {
+      if (visited.find(*it) == visited.end() && isScheduled.find(*it) == isScheduled.end()) {
         nodesStack.push_back(*it);
+        isScheduled.insert(idInPdg);
       }
     }
   }
