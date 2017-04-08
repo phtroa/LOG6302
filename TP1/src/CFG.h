@@ -13,6 +13,7 @@ class CFG
     CFG(const std::string& id);
     CFG(const std::string& id, int ent, int ext);
     void dump(std::ostream& o) const;
+    void dumpReverse(std::ostream& o) const;
     void addNode(std::shared_ptr<CFGNode> node);
     void addVertice(int v1, int v2);
     void addReverseVertice(int v1, int v2);

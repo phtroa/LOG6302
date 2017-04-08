@@ -27,6 +27,25 @@ void CFG::dump(std::ostream& o) const
   }
 }
 
+
+void CFG::dumpReverse(std::ostream& o) const
+{
+  std::string idInGraph;
+  for (auto it = nodes.begin(); it != nodes.end(); it++) {
+    o << myID << **it << std::endl;
+  }
+
+  std::string idsrc;
+  std::string iddest;
+  for (int i = 0; i < reverseVertices.size(); i++) {
+    idsrc = myID + std::to_string(i);
+    for (int j = 0; j < reverseVertices[i].size(); j++) {
+      iddest = myID + std::to_string(reverseVertices[i][j]);
+      o << idsrc << " -> " << iddest << std::endl;
+    }
+  }
+}
+
 void CFG::addNode(std::shared_ptr<CFGNode> node)
 {
   nodes.push_back(node);

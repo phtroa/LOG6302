@@ -34,4 +34,5 @@ void MergeGraph::merge(const CFG& fgraph, const CFG& sgraph, CFG& res)
     }
   }
 
+  delete [] idToNei;
 }

@@ -8,6 +8,7 @@
 #include <clang/AST/ASTConsumer.h>
 #include <clang/Frontend/CompilerInstance.h>
 
+#include "BackwardSlicer.h"
 #include "CFGVisitor.h"
 #include "CDGraphBuilder.h"
 #include "DDGraphBuilder.h"
@@ -194,9 +195,22 @@ int main(int argc, const char **argv) {
   std::cout << "----------------------------------------------------------------" << std::endl;
   ForwardSlicer fSlicer;
   CFG fSliceGraph("FSlice");
-  fSlicer.slice("nw", 12, pdGraph, fSliceGraph);
+  fSlicer.slice("inword", 10, pdGraph, fSliceGraph);
   std::cout << " digraph G {" << std::endl;
   fSliceGraph.dump(std::cout);
+  std::cout << "}" << std::endl;
+
+  std::cout << ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,," << std::endl;
+  std::cout << " digraph G {" << std::endl;
+  pdGraph.dumpReverse(std::cout);
+  std::cout << "}" << std::endl;
+
+  std::cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << std::endl;
+  BackwardSlicer bSlicer;
+  CFG bSliceGraph("BSlice");
+  bSlicer.slice("inword", 22, pdGraph, bSliceGraph);
+  std::cout << " digraph G {" << std::endl;
+  bSliceGraph.dump(std::cout);
   std::cout << "}" << std::endl;
 
 

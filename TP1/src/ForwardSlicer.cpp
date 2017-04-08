@@ -31,20 +31,20 @@ void ForwardSlicer::slice(const std::string& varName, int lineNumber,
     const std::vector<int>& sucessors = getSuccessors(pdGraph, idInPdg);
     for (auto it = sucessors.cbegin(); it != sucessors.cend(); it++) {
 
-      if (visited.find(*it) != visited.end()) {
-        continue;
+      if (oldIDToNewID.find(*it) == oldIDToNewID.end()) {
+        node = std::shared_ptr<CFGNode>(pdGraph.getNode(*it)->clone());
+        node->setId(currID);
+        sliceOUT.addNode(node);
+        oldIDToNewID[*it] = currID;
+        currID++;
       }
-
-      node = std::shared_ptr<CFGNode>(pdGraph.getNode(*it)->clone());
-      node->setId(currID);
-      sliceOUT.addNode(node);
-      oldIDToNewID[*it] = currID;
-      currID++;
 
       sliceOUT.addVertice(oldIDToNewID[idInPdg], oldIDToNewID[*it]);
       sliceOUT.addReverseVertice(oldIDToNewID[*it], oldIDToNewID[idInPdg]);
 
-      nodesStack.push_back(*it);
+      if (visited.find(*it) == visited.end()) {
+        nodesStack.push_back(*it);
+      }
     }
   }
 }
