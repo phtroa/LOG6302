@@ -6,6 +6,7 @@
 #include "BreakNode.h"
 #include "ContinueNode.h"
 #include "ForNode.h"
+#include "FuncCall.h"
 #include "WhileNode.h"
 #include "DoWhileNode.h"
 #include "MethodNode.h"
@@ -230,13 +231,12 @@ void CFGVisitor::visitPre(DoWhileNode* node)
   loopStackBegin.push_back(beginID);
   loopStackEnd.push_back(endID);
 
-  graph.back().addVertice(beginID, condID);
-  graph.back().addReverseVertice(condID, beginID);
   graph.back().addVertice(condID, endID);
   graph.back().addReverseVertice(endID, condID);
-  currID = condID;
+  currID = beginID;
 
-  stackBegin.push_back(condID);
+  stackBegin.push_back(beginID);
+  condStack.push_back(condID);
   stackEnd.push_back(endID);
 
   std::cout << "Fin visitPre Loop" << std::endl;
@@ -276,6 +276,26 @@ void CFGVisitor::visitPre(ForNode* node)
   stackEnd.push_back(endID);
 
   std::cout << "Fin visitPre Loop" << std::endl;
+}
+
+void CFGVisitor::visitPre(FuncCall* node)
+{
+  int beginID = localID;
+  std::cout << "in visitPre FuncCall " + std::to_string(beginID) << std::endl;
+  std::shared_ptr<CFGNode> fCall(
+    new CFGNode(beginID,"FuncCall : " + node->getFuncName(), node->getLineNumber())
+  );
+  fCall->setVars(node->getVars());
+  localID++;
+  graph.back().addNode(fCall);
+
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+
+  stackBegin.push_back(beginID);
+  stackEnd.push_back(beginID);
+  currID = beginID;
+  std::cout << "Fin visitPre FuncCall" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(MethodNode* node)
@@ -337,6 +357,14 @@ void CFGVisitor::visitPost(AssignNode* node)
   stackBegin.pop_back();
   stackEnd.pop_back();
   std::cout << "Fin visitPost Assign" << std::endl;
+}
+
+void CFGVisitor::visitPost(FuncCall* node)
+{
+  std::cout << "in visitPost FuncCall" << std::endl;
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  std::cout << "Fin visitPost FuncCall" << std::endl;
 }
 
 void CFGVisitor::visitPost(VarNode* node)
@@ -419,11 +447,13 @@ void CFGVisitor::visitPost(DoWhileNode* node)
   loopStackEnd.pop_back();
   int endid = stackEnd.back();
   int beginID = stackBegin.back();
+  int condID = condStack.back();
   stackBegin.pop_back();
   stackEnd.pop_back();
+  condStack.pop_back();
   if (needlink) {
-    graph.back().addVertice(currID, beginID);
-    graph.back().addReverseVertice(beginID, currID);
+    graph.back().addVertice(currID, condID);
+    graph.back().addReverseVertice(condID, currID);
   }
   needlink = true;
   currID = endid;
