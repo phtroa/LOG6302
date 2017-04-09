@@ -465,9 +465,9 @@ std::vector<CFG>& CFGVisitor::getGraph()
 
 void CFGVisitor::dump(std::ostream& o) const
 {
-    std::cout << " digraph G {" << std::endl;
+    o << " digraph G {" << std::endl;
     for (auto it = graph.begin(); it !=  graph.end(); it++) {
       it->dump(o);
     }
-    std::cout << "}" << std::endl;
+    o << "}" << std::endl;
 }
