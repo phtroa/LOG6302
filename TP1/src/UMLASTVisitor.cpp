@@ -115,5 +115,12 @@ void UMLASTVisitor::cleanupString(std::string& myStr) const
 
  void UMLASTVisitor::visitPost(ProgramNode* node)
 {
-  builder.dump(std::cout);
+  //builder.dump(std::cout);
+}
+
+
+
+void UMLASTVisitor::dump(std::ostream& o)
+{
+  builder.dump(o);
 }

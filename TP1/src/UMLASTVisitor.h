@@ -17,6 +17,8 @@ class UMLASTVisitor : public ABSASTVisitor {
 public:
   UMLASTVisitor();
   ~UMLASTVisitor();
+
+    void dump(std::ostream& o);
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(MethodNode* node);
     virtual void visitPre(AttributeNode* node);

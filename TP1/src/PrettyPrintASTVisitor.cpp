@@ -18,7 +18,7 @@
 #include "AssignNode.h"
 
 
-PrettyPrintASTVisitor::PrettyPrintASTVisitor() : spacePadding(0)
+PrettyPrintASTVisitor::PrettyPrintASTVisitor(std::ostream& stream) : spacePadding(0), o(stream)
 {
 }
 
@@ -30,7 +30,7 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   void PrettyPrintASTVisitor::writeSpaces(int nb)
   {
     for (int i = 0; i < nb; i++) {
-      std::cout << " ";
+      o << " ";
     }
   }
 
@@ -38,8 +38,8 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 {
 
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "ClassNode : " << node->getClassName() << std::endl;
+  o << "+";
+  o << "ClassNode : " << node->getClassName() << std::endl;
   spacePadding++;
 }
 
@@ -47,96 +47,96 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
 {
 
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "CondNode" << std::endl;
+  o << "+";
+  o << "CondNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(BreakNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "BreakNode" << std::endl;
+  o << "+";
+  o << "BreakNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(ContinueNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "ContinueNode" << std::endl;
+  o << "+";
+  o << "ContinueNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(ForNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "ForNode" << std::endl;
+  o << "+";
+  o << "ForNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(WhileNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "WhileNode" << std::endl;
+  o << "+";
+  o << "WhileNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(DoWhileNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "DoWhileNode" << std::endl;
+  o << "+";
+  o << "DoWhileNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(MethodNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "MethodNode : " << node->getMethodName() << std::endl;
+  o << "+";
+  o << "MethodNode : " << node->getMethodName() << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(NamespaceNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "NamespaceNode : " << node->getName() << std::endl;
+  o << "+";
+  o << "NamespaceNode : " << node->getName() << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(ProgramNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "ProgramNode" << std::endl;
+  o << "+";
+  o << "ProgramNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(VarNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "VarNode : " << node->getVarName() << std::endl;
+  o << "+";
+  o << "VarNode : " << node->getVarName() << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(AttributeNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "AttNode : " << node->getAttName() << node->getType().getType() << std::endl;
+  o << "+";
+  o << "AttNode : " << node->getAttName() << node->getType().getType() << std::endl;
   spacePadding++;
 }
 
 void PrettyPrintASTVisitor::visitPre(AssignNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "AssignNode : " << node->getVarName() << std::endl;
+  o << "+";
+  o << "AssignNode : " << node->getVarName() << std::endl;
   spacePadding++;
 
 }
@@ -144,16 +144,16 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
  void PrettyPrintASTVisitor::visitPre(ReturnNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "ReturnNode" << std::endl;
+  o << "+";
+  o << "ReturnNode" << std::endl;
   spacePadding++;
 }
 
  void PrettyPrintASTVisitor::visitPre(BlockNode* node)
 {
   writeSpaces(spacePadding);
-  std::cout << "+";
-  std::cout << "BlockNode" << std::endl;
+  o << "+";
+  o << "BlockNode" << std::endl;
   spacePadding++;
 }
 

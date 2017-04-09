@@ -15,10 +15,10 @@
 #include "VarNode.h"
 
 
-MetricASTVisitor::MetricASTVisitor() : currId(0), nbIf(0), nbLoop(0),
- nbJump(0), nbVar(0)
+MetricASTVisitor::MetricASTVisitor(std::ostream& stream) : currId(0), nbIf(0), nbLoop(0),
+ nbJump(0), nbVar(0), o(stream)
 {
-  std::cout << "id,nom Fichier,nom Classe, nom méthode, #cond, #boucle, #jump, #var" << std::endl;
+  o << "id,nom Fichier,nom Classe, nom méthode, #cond, #boucle, #jump, #var" << std::endl;
 }
 
 MetricASTVisitor::~MetricASTVisitor()
@@ -87,7 +87,7 @@ MetricASTVisitor::~MetricASTVisitor()
 
  void MetricASTVisitor::visitPost(MethodNode* node)
 {
-    std::cout << currId << "," << node->getFileName() << "," << className << ","
+    o << currId << "," << node->getFileName() << "," << className << ","
     << node->getMethodName() << "," << nbIf << "," << nbLoop << ","
     << nbJump << "," << nbVar << std::endl;
     currId++;

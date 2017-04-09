@@ -8,7 +8,7 @@
 //Produces a dump of the tree while showing its structure
 class PrettyPrintASTVisitor : public ABSASTVisitor {
 public:
-  PrettyPrintASTVisitor();
+  PrettyPrintASTVisitor(std::ostream& stream);
   ~PrettyPrintASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
@@ -43,6 +43,9 @@ public:
     virtual void visitPost(BlockNode* node);
 
 private:
+
+  std::ostream& o;
+
   void writeSpaces(int nb); //writes nb spaces on the screen
   int spacePadding;
 };

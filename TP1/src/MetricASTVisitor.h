@@ -8,7 +8,7 @@
 //Compute the metric on a program
 class MetricASTVisitor : public ABSASTVisitor {
 public:
-  MetricASTVisitor();
+  MetricASTVisitor(std::ostream& stream);
   ~MetricASTVisitor();
     virtual void visitPre(ClassNode* node);
     virtual void visitPre(CondNode* node);
@@ -24,6 +24,9 @@ public:
     virtual void visitPost(MethodNode* node);
 
 private:
+
+  std::ostream& o;
+
   int currId;
   int nbIf;
   int nbLoop;
