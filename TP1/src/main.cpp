@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
 
   int long_index =0;
   int opt = 0;
-  while ((opt = getopt_long(argc, argv,"a:u:c:d:p:r:f:b:l:v:",
+  while ((opt = getopt_long(argc, argv,"a:u:c:d:p:r:f:b:l:v:x:y:",
   long_options, &long_index )) != -1) {
     switch (opt) {
       case 'i' :
@@ -182,9 +182,20 @@ int main(int argc, char **argv) {
       case 'g' :
         pdG_file = optarg;
         isRequired.insert("pdg");
+        mustComputeCFG = true;
       break;
       case 'v' :
         varNameForSlice = optarg;
+      break;
+      case 'x' :
+        cdG_file = optarg;
+        isRequired.insert("cdGraph");
+        mustComputeCFG = true;
+      break;
+      case 'y' :
+        ddG_file = optarg;
+        isRequired.insert("ddGraph");
+        mustComputeCFG = true;
       break;
       default:
         print_usage();
