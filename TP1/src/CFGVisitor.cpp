@@ -50,6 +50,7 @@ void CFGVisitor::visitPre(AssignNode* node)
 
 void CFGVisitor::visitPre(CaseNode* node)
 {
+  needlink = true;
   int beginID = localID;
   std::cout << "in visitPre CaseNode " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> CondEntry(

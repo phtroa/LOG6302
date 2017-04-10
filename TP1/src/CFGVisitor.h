@@ -8,16 +8,7 @@
 #include "ABSASTVisitor.h"
 #include "CFGNode.h"
 #include "CFGAssignNode.h"
-// #include "CFGCondNode.h"
-// #include "CFGBreakNode.h"
-// #include "CFGBlockNode.h"
-// #include "CFGReturnNode.h"
-// #include "CFGLoopNode.h"
-// #include "CFGMethodNode.h"
-// #include "CFGTreeVisitor.h"
 #include "CFG.h"
-// #include "CFGTreeVisitor.h"
-// #include "CFGTreeNode.h"
 
 //Compute the CFG
 class CFGVisitor : public ABSASTVisitor {

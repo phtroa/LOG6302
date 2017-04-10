@@ -78,6 +78,7 @@ private:
   clang::ASTContext &context_;
   bool inMethod;
   int ifDepth;
+  int switchDepth;
   std::shared_ptr<ASTTree> myAst;
   std::shared_ptr<MetaTree> infoTree;
   std::shared_ptr<ABSNode> currNode;
@@ -85,6 +86,7 @@ private:
   bool isHeaderSystem(clang::Decl* D) const;
   VarInStament extractVars(clang::Stmt *S) const;
   bool isInIf() const;
+  bool isInSwitch() const;
 
   std::string GetStatementString(clang::Stmt *S) {
     bool invalid;

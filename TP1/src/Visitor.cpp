@@ -3,7 +3,8 @@
   Visitor::Visitor(clang::ASTContext &context,
      std::shared_ptr<ASTTree> ast,
      std::shared_ptr<MetaTree> info)
-      : context_(context), myAst(ast), infoTree(info), inMethod(false), ifDepth(0) {
+      : context_(context), myAst(ast), infoTree(info), inMethod(false), ifDepth(0), switchDepth(0)
+  {
     currNode = ast->getRoot();
   }
 
@@ -413,6 +414,10 @@ bool Visitor::TraverseVarDecl(clang::VarDecl *D) {
 bool Visitor::isInIf() const {
   return ifDepth > 0;
 }
+
+bool Visitor::isInSwitch() const {
+  return ifDepth > 0;
+}
 /**********************/
 /* If traverse        */
 /**********************/
@@ -630,6 +635,8 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
     return true;
   }
 
+  switchDepth++;
+
   clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
   std::string  file_path("Unknown");
   unsigned int line_number(0);
@@ -646,6 +653,7 @@ bool Visitor::TraverseSwitchStmt(clang::SwitchStmt *S) {
   clang::RecursiveASTVisitor<Visitor>::TraverseSwitchStmt(S);
   currNode = myNode->getParent();
 
+  switchDepth--;
   std::cout<<"[LOG6302] Fin Traverse d'une condition : \" switch ("<<GetStatementString(S->getCond())<<") \"\n";
 
   return true;
@@ -895,7 +903,7 @@ bool Visitor::TraverseReturnStmt(clang::ReturnStmt *S) {
 /* ifBlock traverse           */
 /**********************/
 bool Visitor::TraverseCompoundStmt(clang::CompoundStmt *S) {
-  if (!isInIf()) {
+  if (!isInIf() && !isInSwitch()) {
     return clang::RecursiveASTVisitor<Visitor>::TraverseCompoundStmt(S);
   }
 
