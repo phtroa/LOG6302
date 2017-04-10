@@ -13,6 +13,7 @@
 #include "AttributeNode.h"
 #include "AssignNode.h"
 #include "ClassNode.h"
+#include "CaseNode.h"
 #include "CondNode.h"
 #include "BlockNode.h"
 #include "IfNode.h"
@@ -21,6 +22,7 @@
 #include "ContinueNode.h"
 #include "LoopNode.h"
 #include "ForNode.h"
+#include "FuncCall.h"
 #include "WhileNode.h"
 #include "DoWhileNode.h"
 #include "MetaTree.h"
@@ -49,6 +51,7 @@ public:
   bool TraverseCXXMethodDecl(clang::CXXMethodDecl *D);
   bool TraverseCXXRecordDecl(clang::CXXRecordDecl *D);
   bool TraverseFieldDecl(clang::FieldDecl *D);
+  //bool TraverseCallExpr(clang::CallExpr *S);
   bool TraverseVarDecl(clang::VarDecl *D);
   bool TraverseIfStmt(clang::IfStmt *S);
   bool TraverseBinAssign(clang::BinaryOperator *Bop);
@@ -59,6 +62,7 @@ public:
   bool TraverseCompoundStmt(clang::CompoundStmt *S);
   bool TraverseSwitchStmt(clang::SwitchStmt *S);
   bool TraverseCaseStmt(clang::CaseStmt *S);
+  bool TraverseDefaultStmt(clang::DefaultStmt *S);
   bool TraverseBreakStmt(clang::BreakStmt *S);
   bool TraverseContinueStmt(clang::ContinueStmt *S);
   bool TraverseForStmt(clang::ForStmt *S);
@@ -79,6 +83,7 @@ private:
   std::shared_ptr<ABSNode> currNode;
 
   bool isHeaderSystem(clang::Decl* D) const;
+  VarInStament extractVars(clang::Stmt *S) const;
   bool isInIf() const;
 
   std::string GetStatementString(clang::Stmt *S) {

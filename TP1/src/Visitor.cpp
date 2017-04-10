@@ -227,6 +227,50 @@ std::string Visitor::computeID(const clang::DeclContext* D) const
 
   return id;
 }
+/*
+bool Visitor::TraverseCallExpr(clang::CallExpr *S)
+{
+  if (!inMethod) {
+    return true;
+  }
+
+  std::cout << "in CallExpr" << std::endl;
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+
+  std::string name;
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (!extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cerr << "got nullptr in TraverseCallExpr" << std::endl;
+  }
+
+  //We extract the name
+  clang::Expr* callee = S->getCallee();
+  ValueExtractorVisitor valCalleeVisitor;
+  valCalleeVisitor.TraverseStmt(callee);
+  VarInStament varsOfCallee = valCalleeVisitor.getAllVar();
+  for (int i = 0; i < varsOfCallee.getNumValues(); i++) {
+    name = varsOfCallee.getValue(i);
+  }
+
+
+  //we look for the arg
+  VarInStament vars;
+  for (int i = 0; i < S->getNumArgs(); i++) {
+    ValueExtractorVisitor valVisitor;
+    VarInStament varsVis = valVisitor.getAllVar();
+    for (int i = 0; i < varsVis.getNumValues(); i++) {
+      vars.addValue(varsVis.getValue(i));
+    }
+  }
+
+  std::shared_ptr<ABSNode> myNode(new FuncCall(name, line_number));
+  myNode->setVars(vars);
+  myAst->linkParentToChild(currNode, myNode); //we link to the class
+
+  return true;
+}*/
 
 bool Visitor::TraverseNamespaceDecl(clang::NamespaceDecl *D)
 {
@@ -624,11 +668,37 @@ bool Visitor::TraverseCaseStmt (clang::CaseStmt  *S) {
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
-  std::shared_ptr<ABSNode> myNode(new BlockNode(line_number));
+  std::shared_ptr<ABSNode> myNode(new CaseNode(line_number));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
   clang::RecursiveASTVisitor<Visitor>::TraverseCaseStmt(S);
+  currNode = myNode->getParent();
+
+  std::cout<<"[LOG6302] Fin Traverse d'un case" << std::endl;
+
+  return true;
+}
+
+bool Visitor::TraverseDefaultStmt (clang::DefaultStmt  *S) {
+  if (!inMethod) {
+    return true;
+  }
+
+  clang::FullSourceLoc location = context_.getFullLoc(S->getLocStart());
+  std::string  file_path("Unknown");
+  unsigned int line_number(0);
+  unsigned int col_number(0);
+  if (extractLocationInfo(location, file_path, line_number, col_number)) {
+    std::cout << "[LOG6302] Traverse d'un case"
+    << " in file " << file_path << " at " << line_number <<"\"\n";
+  }
+
+  std::shared_ptr<ABSNode> myNode(new CaseNode(line_number));
+  myAst->linkParentToChild(currNode, myNode);
+
+  currNode = myNode;
+  clang::RecursiveASTVisitor<Visitor>::TraverseDefaultStmt(S);
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'un case" << std::endl;
@@ -711,16 +781,26 @@ bool Visitor::TraverseForStmt(clang::ForStmt *S) {
     << " in file " << file_path << " at " << line_number <<"\"\n";
   }
 
+  clang::Expr* incr;
   std::shared_ptr<ABSNode> myNode(new ForNode(line_number));
+  myNode->setVars(extractVars(S->getCond()));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;
-  clang::RecursiveASTVisitor<Visitor>::TraverseForStmt(S);
+  clang::RecursiveASTVisitor<Visitor>::TraverseStmt(S->getBody());
+  clang::RecursiveASTVisitor<Visitor>::TraverseStmt(S->getInc());
   currNode = myNode->getParent();
 
   std::cout<<"[LOG6302] Fin Traverse d'une boucle : \" for\"\n";
 
   return true;
+}
+
+VarInStament Visitor::extractVars(clang::Stmt *S) const
+{
+  ValueExtractorVisitor valVisitor;
+  valVisitor.TraverseStmt(S);
+  return valVisitor.getAllVar();
 }
 
 /**********************/
@@ -741,9 +821,7 @@ bool Visitor::TraverseWhileStmt(clang::WhileStmt *S) {
   }
 
   std::shared_ptr<ABSNode> myNode(new WhileNode(line_number));
-  ValueExtractorVisitor valVisitor;
-  valVisitor.TraverseStmt(S->getCond());
-  myNode->setVars(valVisitor.getAllVar());
+  myNode->setVars(extractVars(S->getCond()));
   myAst->linkParentToChild(currNode, myNode);
 
   currNode = myNode;

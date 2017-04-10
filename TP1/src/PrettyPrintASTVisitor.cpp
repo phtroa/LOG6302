@@ -3,7 +3,7 @@
 #include <iomanip>
 
 #include "ClassNode.h"
-#include "CondNode.h"
+#include "IfNode.h"
 #include "JumpNode.h"
 #include "ForNode.h"
 #include "WhileNode.h"
@@ -43,12 +43,21 @@ PrettyPrintASTVisitor::~PrettyPrintASTVisitor()
   spacePadding++;
 }
 
- void PrettyPrintASTVisitor::visitPre(CondNode* node)
+ void PrettyPrintASTVisitor::visitPre(IfNode* node)
 {
 
   writeSpaces(spacePadding);
   o << "+";
-  o << "CondNode" << std::endl;
+  o << "IfNode" << std::endl;
+  spacePadding++;
+}
+
+ void PrettyPrintASTVisitor::visitPre(SwitchNode* node)
+{
+
+  writeSpaces(spacePadding);
+  o << "+";
+  o << "SwitchNode" << std::endl;
   spacePadding++;
 }
 
@@ -162,7 +171,12 @@ void PrettyPrintASTVisitor::visitPre(AssignNode* node)
   spacePadding--;
 }
 
- void PrettyPrintASTVisitor::visitPost(CondNode* node)
+ void PrettyPrintASTVisitor::visitPost(IfNode* node)
+{
+  spacePadding--;
+}
+
+ void PrettyPrintASTVisitor::visitPost(SwitchNode* node)
 {
   spacePadding--;
 }

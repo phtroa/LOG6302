@@ -2,9 +2,11 @@
 
 #include "AssignNode.h"
 #include "ClassNode.h"
-#include "CondNode.h"
+#include "IfNode.h"
+#include "SwitchNode.h"
 #include "BreakNode.h"
 #include "ContinueNode.h"
+#include "CaseNode.h"
 #include "ForNode.h"
 #include "FuncCall.h"
 #include "WhileNode.h"
@@ -46,6 +48,31 @@ void CFGVisitor::visitPre(AssignNode* node)
   std::cout << "Fin visitPre Assign" + std::to_string(beginID) << std::endl;
 }
 
+void CFGVisitor::visitPre(CaseNode* node)
+{
+  int beginID = localID;
+  std::cout << "in visitPre CaseNode " + std::to_string(beginID) << std::endl;
+  std::shared_ptr<CFGNode> CondEntry(
+    new CFGNode(localID++,"CaseNodeBegin" + std::to_string(beginID),
+     node->getLineNumber())
+   );
+  graph.back().addNode(CondEntry);
+
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+
+  int endID = localID;
+  std::shared_ptr<CFGNode> CondEnd(new CFGNode(localID++,
+    "CaseNodeEnd" + std::to_string(beginID), node->getLineNumber())
+  );
+  graph.back().addNode(CondEnd);
+
+  stackBegin.push_back(beginID);
+  stackEnd.push_back(endID);
+  currID = beginID;
+  std::cout << "Fin visitPre CaseNode" + std::to_string(beginID) << std::endl;
+}
+
 void CFGVisitor::visitPre(VarNode* node)
 {
   //In case we have a declaration like int x = 0;
@@ -70,9 +97,8 @@ void CFGVisitor::visitPre(VarNode* node)
     std::cout << "Fin visitPre varNode Assign" + std::to_string(beginID) << std::endl;
 }
 
-void CFGVisitor::visitPre(CondNode* node)
+void CFGVisitor::visitPre(IfNode* node)
 {
-
   int beginID = localID;
   std::cout << "in visitPre cond " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> CondEntry(
@@ -110,7 +136,47 @@ void CFGVisitor::visitPre(CondNode* node)
   std::cout << "Fin visitPre cond" + std::to_string(beginID) << std::endl;
 }
 
-void CFGVisitor::visitBetween(CondNode* node)
+void CFGVisitor::visitPre(SwitchNode* node)
+{
+
+  int beginID = localID;
+  std::cout << "in visitPre SwitchNode " + std::to_string(beginID) << std::endl;
+  std::shared_ptr<CFGNode> CondEntry(
+    new CFGNode(localID++,"Switch" + std::to_string(beginID),
+     node->getLineNumber())
+   );
+  graph.back().addNode(CondEntry);
+
+  graph.back().addVertice(currID, beginID);
+  graph.back().addReverseVertice(beginID, currID);
+
+  int condID = localID;
+  std::shared_ptr<CFGNode> CondNode(
+     new CFGNode(localID++,
+       "Condition" + std::to_string(beginID), node->getLineNumber())
+   );
+  CondNode->setVars(node->getVars());
+  graph.back().addNode(CondNode);
+  graph.back().addVertice(beginID, condID);
+  graph.back().addReverseVertice(condID, beginID);
+  int endID = localID;
+  std::shared_ptr<CFGNode> CondEnd( new CFGNode(localID++,
+    "CondEnd" + std::to_string(beginID), node->getLineNumber())
+  );
+  graph.back().addNode(CondEnd);
+  if (node->getNbChildren() < 1) {
+    graph.back().addVertice(condID, endID);
+    graph.back().addReverseVertice(endID, condID);
+  }
+
+  loopStackEnd.push_back(endID);
+  stackBegin.push_back(condID);
+  stackEnd.push_back(endID);
+  currID = condID;
+  std::cout << "Fin visitPre cond" + std::to_string(beginID) << std::endl;
+}
+
+void CFGVisitor::visitBetween(IfNode* node)
 {
   int endif = stackEnd.back();
   int beginif = stackBegin.back();
@@ -222,6 +288,7 @@ void CFGVisitor::visitPre(DoWhileNode* node)
   std::shared_ptr<CFGNode> CondNode(
     new CFGNode(localID++,"LoopCondition", node->getLineNumber())
   );
+  CondNode->setVars(node->getVars());
   graph.back().addNode(CondNode);
   int endID = localID;
   std::shared_ptr<CFGNode> loopEnd(
@@ -257,6 +324,7 @@ void CFGVisitor::visitPre(ForNode* node)
   std::shared_ptr<CFGNode> CondNode( new
     CFGNode(localID++,"LoopCondition", node->getLineNumber())
   );
+  CondNode->setVars(node->getVars());
   graph.back().addNode(CondNode);
   int endID = localID;
   std::shared_ptr<CFGNode> loopEnd(
@@ -359,6 +427,22 @@ void CFGVisitor::visitPost(AssignNode* node)
   std::cout << "Fin visitPost Assign" << std::endl;
 }
 
+void CFGVisitor::visitPost(CaseNode* node)
+{
+  std::cout << "in visitPost CaseNode" << std::endl;
+  int beginID = stackBegin.back();
+  int endID = stackEnd.back();
+  if (needlink) {
+    graph.back().addVertice(currID, endID);
+    graph.back().addReverseVertice(endID, currID);
+  }
+  needlink = true;
+  currID = endID;
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  std::cout << "in visitPost CaseNode" << std::endl;
+}
+
 void CFGVisitor::visitPost(FuncCall* node)
 {
   std::cout << "in visitPost FuncCall" << std::endl;
@@ -406,7 +490,7 @@ void CFGVisitor::visitPost(MethodNode* node)
   std::cout << "Fin visitPost Method" << std::endl;
 }
 
-void CFGVisitor::visitPost(CondNode* node)
+void CFGVisitor::visitPost(IfNode* node)
 {
   std::cout << "in visitPost cond" << std::endl;
   //currNode = currNode->getParent();
@@ -423,6 +507,23 @@ void CFGVisitor::visitPost(CondNode* node)
   stackBegin.pop_back();
   stackEnd.pop_back();
   std::cout << "in visitPost cond" << std::endl;
+}
+
+void CFGVisitor::visitPost(SwitchNode* node)
+{
+  std::cout << "in visitPost SwitchNode" << std::endl;
+  int beginID = stackBegin.back();
+  int endID = stackEnd.back();
+  if (needlink) {
+    graph.back().addVertice(currID, endID);
+    graph.back().addReverseVertice(endID, currID);
+  }
+  needlink = true;
+  currID = endID;
+  stackBegin.pop_back();
+  stackEnd.pop_back();
+  loopStackEnd.pop_back();
+  std::cout << "in visitPost SwitchNode" << std::endl;
 }
 
 void CFGVisitor::visitPost(WhileNode* node)

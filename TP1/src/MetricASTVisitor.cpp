@@ -1,7 +1,7 @@
 #include "MetricASTVisitor.h"
 
 #include "ClassNode.h"
-#include "CondNode.h"
+#include "IfNode.h"
 #include "BreakNode.h"
 #include "ContinueNode.h"
 #include "ForNode.h"
@@ -36,7 +36,12 @@ MetricASTVisitor::~MetricASTVisitor()
   fileName = node->getFilePath();
 }
 
- void MetricASTVisitor::visitPre(CondNode* node)
+ void MetricASTVisitor::visitPre(IfNode* node)
+{
+  nbIf++;
+}
+
+ void MetricASTVisitor::visitPre(SwitchNode* node)
 {
   nbIf++;
 }

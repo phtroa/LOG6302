@@ -11,7 +11,8 @@ public:
   PrettyPrintASTVisitor(std::ostream& stream);
   ~PrettyPrintASTVisitor();
     virtual void visitPre(ClassNode* node);
-    virtual void visitPre(CondNode* node);
+    virtual void visitPre(IfNode* node);
+    virtual void visitPre(SwitchNode* node);
     virtual void visitPre(BreakNode* node);
     virtual void visitPre(ContinueNode* node);
     virtual void visitPre(WhileNode* node);
@@ -27,7 +28,8 @@ public:
     virtual void visitPre(BlockNode* node);
 
     virtual void visitPost(ClassNode* node);
-    virtual void visitPost(CondNode* node);
+    virtual void visitPost(IfNode* node);
+    virtual void visitPost(SwitchNode* node);
     virtual void visitPost(BreakNode* node);
     virtual void visitPost(ContinueNode* node);
     virtual void visitPost(WhileNode* node);

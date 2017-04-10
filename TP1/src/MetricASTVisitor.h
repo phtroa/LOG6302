@@ -11,7 +11,8 @@ public:
   MetricASTVisitor(std::ostream& stream);
   ~MetricASTVisitor();
     virtual void visitPre(ClassNode* node);
-    virtual void visitPre(CondNode* node);
+    virtual void visitPre(IfNode* node);
+    virtual void visitPre(SwitchNode* node);
     virtual void visitPre(BreakNode* node);
     virtual void visitPre(ContinueNode* node);
     virtual void visitPre(ForNode* node);

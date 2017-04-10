@@ -48,7 +48,7 @@ int DomTree::getiDom(int x) const
 void DomTree::dump(std::ostream& o) const
 {
 
-  std::cout << " digraph G {" << std::endl;
+  o << " digraph G {" << std::endl;
   for (auto it = mNodes.begin(); it != mNodes.end(); it++) {
     (*it)->dump(o);
   }
@@ -63,7 +63,7 @@ void DomTree::dump(std::ostream& o) const
     idest = std::to_string(i);
     o << idsrc << " -> " << idest << std::endl;
   }
-  std::cout << "}" << std::endl;
+  o << "}" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& o, const DomTree& tree) {
