@@ -36,7 +36,10 @@ static std::shared_ptr<ASTTree> myAst;
 static std::shared_ptr<MetaTree> infoTree;
 
 void print_usage() {
-    printf("Usage: rectangle [ap] -l num -b num\n");
+    std::cout << "Usage: --input file --ast file --metric file" << std::endl;
+    std::cout << "--uml file --cfg file --dom file --pdom file" << std::endl;
+    std::cout << "--rea file --cdGraph file --ddGraph file --pdg file" << std::endl;
+    std::cout << "--fSlice file --bSlice file --line n --varName name" << std::endl;
 }
 
 /******************************************************************************/
@@ -79,6 +82,7 @@ int main(int argc, char **argv) {
   //file names
   std::string input;
   std::string ast_file;
+  std::string metric_file;
   std::string uml_file;
   std::string cfg_file;
   std::string dom_file;
@@ -105,6 +109,7 @@ int main(int argc, char **argv) {
 
   static struct option long_options[] = {
     {"ast",      required_argument,       0,  'a' },
+    {"metric",      required_argument,       0,  'm' },
     {"input",      required_argument,       0,  'i' },
     {"uml",      required_argument,       0,  'u' },
     {"cfg",      required_argument,       0,  'c' },
@@ -132,6 +137,10 @@ int main(int argc, char **argv) {
       case 'a' :
         ast_file = optarg;
         isRequired.insert("ast");
+      break;
+      case 'm' :
+        metric_file = optarg;
+        isRequired.insert("metric");
       break;
       case 'u' :
         uml_file = optarg;
@@ -238,12 +247,22 @@ int main(int argc, char **argv) {
     myAst->acceptVisitor(&printCFG);
   }
 
+  if (isRequired.find("metric") != isRequired.end()) {
+    std::cout << "################################AST#############################" << std::endl;
+    std::ofstream myfile;
+    myfile.open(metric_file);
+    MetricASTVisitor metricV(myfile);
+    myAst->acceptVisitor(&metricV);
+    myfile.close();
+    std::cout << "########################### END AST#############################" << std::endl;
+  }
+
   if (isRequired.find("ast") != isRequired.end()) {
     std::cout << "################################AST#############################" << std::endl;
     std::ofstream myfile;
     myfile.open(ast_file);
-    MetricASTVisitor metricV(myfile);
-    myAst->acceptVisitor(&metricV);
+    PrettyPrintASTVisitor prettyV(myfile);
+    myAst->acceptVisitor(&prettyV);
     myfile.close();
     std::cout << "########################### END AST#############################" << std::endl;
   }
