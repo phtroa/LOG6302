@@ -20,7 +20,7 @@
       std::set<int> allCurrUse = reachingDef[i];
       for (int j = 0; j < vars.getNumValues(); j++) {
         std::set<int> allCurrDef = varnameToDef[vars.getValue(j)];
-        //intersection de tous les definition de j avec celles présentes en i
+        //intersection de toutes les definition de j avec celles présentes en i
         std::set_intersection(allCurrDef.begin(), allCurrDef.end(),
                           allCurrUse.begin(), allCurrUse.end(),
                                       inserter(def, def.end()));
