@@ -9,8 +9,9 @@ void MergeGraph::merge(const CFG& fgraph, const CFG& sgraph, CFG& res)
     res.addNode(node);
   }
 
+  //each node is link to the set of its lattices
   std::set<int>* idToNei = new std::set<int>[fgraph.getSize()];
-  //for the first graph
+  //fill the set for the first graph
   const std::vector<std::vector<int>>& verticesf = fgraph.getVertices();
   for (int i = 0; i < verticesf.size(); i++) {
     for (auto nei = (verticesf[i]).cbegin(); nei != (verticesf[i]).cend(); nei++) {
@@ -18,7 +19,7 @@ void MergeGraph::merge(const CFG& fgraph, const CFG& sgraph, CFG& res)
     }
   }
 
-  //for the second graph
+  //fill the set for the second graph
   const std::vector<std::vector<int>>& verticesS = sgraph.getVertices();
   for (int i = 0; i < verticesS.size(); i++) {
     for (auto nei = (verticesS[i]).cbegin(); nei != (verticesS[i]).cend(); nei++) {
@@ -26,6 +27,7 @@ void MergeGraph::merge(const CFG& fgraph, const CFG& sgraph, CFG& res)
     }
   }
 
+  //Since we use a set, every lattice is present only once
   //we put every vertices in the merged graphe
   for (size_t i = 0; i < fgraph.getSize(); i++) {
     for (auto it = idToNei[i].begin(); it != idToNei[i].end(); it++) {

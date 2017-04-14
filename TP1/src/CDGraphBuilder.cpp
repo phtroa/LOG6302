@@ -1,5 +1,6 @@
 #include "CDGraphBuilder.h"
 
+//algorithm seen in class
 void CDGraphBuilder::build(std::shared_ptr<DomTree> pTree, const CFG& graphIN, CFG& graphOUT)
 {
   for (size_t i = 0; i < pTree->getSize(); i++) {
@@ -29,6 +30,8 @@ void CDGraphBuilder::builS(std::vector<std::pair<int,int>>& S,
                                 std::shared_ptr<DomTree> pTree,
                                 const CFG& graphIN)
 {
+  //parcourt tous les predecesseurs de tous les noeuds en testant s'ils
+  //sont dans S
   for (int x = 0; x < graphIN.getSize(); x++) {
     for (int j = 0; j < graphIN.getSuccessors(x).size(); j++) {
       int y = graphIN.getSuccessors(x)[j];

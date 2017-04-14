@@ -27,6 +27,8 @@ class VarNode;
 //the children the *Post are called once all the chldren have been
 //encoutered
 //between method are called between two nodes
+//beware that by default methods do nothing
+//they must be implemented
 class ABSASTVisitor {
 public:
   virtual ~ABSASTVisitor() = 0;
