@@ -76,7 +76,8 @@ class MyFrontendAction : public clang::ASTFrontendAction {
 int main(int argc, char **argv) {
 
   if (argc <= 1) {
-    throw std::invalid_argument("No argument passed");
+    print_usage();
+    return 0;
   }
 
   //file names
@@ -259,47 +260,38 @@ int main(int argc, char **argv) {
   }
 
   if (isRequired.find("metric") != isRequired.end()) {
-    std::cout << "################################AST#############################" << std::endl;
     std::ofstream myfile;
     myfile.open(metric_file);
     MetricASTVisitor metricV(myfile);
     myAst->acceptVisitor(&metricV);
     myfile.close();
-    std::cout << "########################### END AST#############################" << std::endl;
   }
 
   if (isRequired.find("ast") != isRequired.end()) {
-    std::cout << "################################AST#############################" << std::endl;
     std::ofstream myfile;
     myfile.open(ast_file);
     PrettyPrintASTVisitor prettyV(myfile);
     myAst->acceptVisitor(&prettyV);
     myfile.close();
-    std::cout << "########################### END AST#############################" << std::endl;
   }
 
   if (isRequired.find("uml") != isRequired.end()) {
-    std::cout << "################################UML#############################" << std::endl;
     std::ofstream myfile;
     myfile.open(uml_file);
     UMLASTVisitor printUML;
     myAst->acceptVisitor(&printUML);
     printUML.dump(myfile);
     myfile.close();
-    std::cout << "########################### END UML#############################" << std::endl;
   }
 
   if (isRequired.find("cfg") != isRequired.end()) {
-    std::cout << "################################CFG#############################" << std::endl;
     std::ofstream myfile;
     myfile.open(cfg_file);
     printCFG.dump(myfile);
     myfile.close();
-    std::cout << "########################### END CFG#############################" << std::endl;
   }
 
   if (isRequired.find("dom") != isRequired.end()) {
-    std::cout << "--------------------------------DOM-----------------------------" << std::endl;
     std::ofstream myfile;
     std::vector<CFG> graph = printCFG.getGraph();
     Dominator dom;
@@ -308,11 +300,9 @@ int main(int argc, char **argv) {
       myfile << *(dom.compute(&(*it))) << std::endl;
     }
     myfile.close();
-    std::cout << "--------------------------- END DOM-----------------------------" << std::endl;
   }
 
   if (isRequired.find("pdom") != isRequired.end()) {
-    std::cout << "-------------------------------PDOM-----------------------------" << std::endl;
     std::ofstream myfile;
     std::vector<CFG> graph = printCFG.getGraph();
     PostDominator pdom;
@@ -321,7 +311,6 @@ int main(int argc, char **argv) {
       myfile << *(pdom.compute(&(*it))) << std::endl;
     }
     myfile.close();
-    std::cout << "--------------------------- END PDOM-----------------------------" << std::endl;
   }
 
   if (isRequired.find("rea") != isRequired.end()) {
@@ -455,30 +444,6 @@ int main(int argc, char **argv) {
     }
     myfile.close();
   }
-/*
-
-  std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-  for (auto it = graph.begin(); it != graph.end(); it++) {
-  }
-
-  std::cout << "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << std::endl;
-
-  std::cout << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
-
-  std::cout << "----------------------------------------------------------------" << std::endl;
-  std::cout << " digraph G {" << std::endl;
-  std::cout << "}" << std::endl;
-
-  std::cout << ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,," << std::endl;
-  std::cout << " digraph G {" << std::endl;
-  pdGraph.dumpReverse(std::cout);
-  std::cout << "}" << std::endl;
-
-  std::cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << std::endl;
-  std::cout << " digraph G {" << std::endl;
-  bSliceGraph.dump(std::cout);
-  std::cout << "}" << std::endl;
-*/
 
   return ret;
 }

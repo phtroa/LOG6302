@@ -30,7 +30,6 @@ void CFGVisitor::visitPre(AssignNode* node)
 {
 
   int beginID = localID;
-  std::cout << "in visitPre Assign " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> assign(
     new CFGAssignNode(beginID,"Assignement" + std::to_string(beginID),
      node->getVarName(), node->getLineNumber())
@@ -45,14 +44,12 @@ void CFGVisitor::visitPre(AssignNode* node)
   stackBegin.push_back(beginID);
   stackEnd.push_back(beginID);
   currID = beginID;
-  std::cout << "Fin visitPre Assign" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(CaseNode* node)
 {
   needlink = true;
   int beginID = localID;
-  std::cout << "in visitPre CaseNode " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> CondEntry(
     new CFGNode(localID++,"CaseNodeBegin" + std::to_string(beginID),
      node->getLineNumber())
@@ -71,7 +68,6 @@ void CFGVisitor::visitPre(CaseNode* node)
   stackBegin.push_back(beginID);
   stackEnd.push_back(endID);
   currID = beginID;
-  std::cout << "Fin visitPre CaseNode" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(VarNode* node)
@@ -82,7 +78,6 @@ void CFGVisitor::visitPre(VarNode* node)
   }
 
     int beginID = localID;
-    std::cout << "in visitPre varNode Assign " + std::to_string(beginID) << std::endl;
     std::shared_ptr<CFGNode> assign(
        new CFGAssignNode(beginID,
          "VarDecl" + std::to_string(beginID), node->getVarName(), node->getLineNumber()));
@@ -95,13 +90,11 @@ void CFGVisitor::visitPre(VarNode* node)
     stackBegin.push_back(beginID);
     stackEnd.push_back(beginID);
     currID = beginID;
-    std::cout << "Fin visitPre varNode Assign" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(IfNode* node)
 {
   int beginID = localID;
-  std::cout << "in visitPre cond " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> CondEntry(
     new CFGNode(localID++,"CondBegin" + std::to_string(beginID),
      node->getLineNumber())
@@ -134,14 +127,12 @@ void CFGVisitor::visitPre(IfNode* node)
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
   currID = condID;
-  std::cout << "Fin visitPre cond" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(SwitchNode* node)
 {
 
   int beginID = localID;
-  std::cout << "in visitPre SwitchNode " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> CondEntry(
     new CFGNode(localID++,"Switch" + std::to_string(beginID),
      node->getLineNumber())
@@ -174,21 +165,18 @@ void CFGVisitor::visitPre(SwitchNode* node)
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
   currID = condID;
-  std::cout << "Fin visitPre cond" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitBetween(IfNode* node)
 {
   int endif = stackEnd.back();
   int beginif = stackBegin.back();
-  std::cout << "in visitBetween cond " + std::to_string(beginif) << std::endl;
   if (needlink) {
     graph.back().addVertice(currID, endif);
     graph.back().addReverseVertice(endif, currID);
   }
   needlink = true;
   currID = beginif;
-  std::cout << "Fin visitBetween cond" + std::to_string(beginif) << std::endl;
 }
 
  void CFGVisitor::visitPre(BlockNode* node)
@@ -197,7 +185,6 @@ void CFGVisitor::visitBetween(IfNode* node)
 
 void CFGVisitor::visitPre(BreakNode* node)
 {
-  std::cout << "in visitPre Jump" << std::endl;
 
   int id = localID;
   int breakID = loopStackEnd.back();
@@ -212,13 +199,10 @@ void CFGVisitor::visitPre(BreakNode* node)
   graph.back().addReverseVertice(id, currID);
 
   needlink = false;
-
-  std::cout << "Fin visitPre Jump" << std::endl;
 }
 
 void CFGVisitor::visitPre(ContinueNode* node)
 {
-  std::cout << "in visitPre Jump" << std::endl;
 
   int id = localID;
   int ContinueID = loopStackEnd.back();
@@ -233,13 +217,10 @@ void CFGVisitor::visitPre(ContinueNode* node)
   graph.back().addReverseVertice(id, currID);
 
   needlink = false;
-
-  std::cout << "Fin visitPre Jump" << std::endl;
 }
 
 void CFGVisitor::visitPre(WhileNode* node)
 {
-  std::cout << "in visitPre Loop" << std::endl;
 
   int beginID = localID;
   std::shared_ptr<CFGNode> loopEntry(
@@ -270,13 +251,10 @@ void CFGVisitor::visitPre(WhileNode* node)
 
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
-
-  std::cout << "Fin visitPre Loop" << std::endl;
 }
 
 void CFGVisitor::visitPre(DoWhileNode* node)
 {
-  std::cout << "in visitPre Loop" << std::endl;
 
   int beginID = localID;
   std::shared_ptr<CFGNode> loopEntry(
@@ -306,13 +284,10 @@ void CFGVisitor::visitPre(DoWhileNode* node)
   stackBegin.push_back(beginID);
   condStack.push_back(condID);
   stackEnd.push_back(endID);
-
-  std::cout << "Fin visitPre Loop" << std::endl;
 }
 
 void CFGVisitor::visitPre(ForNode* node)
 {
-  std::cout << "in visitPre Loop" << std::endl;
 
   int beginID = localID;
   std::shared_ptr<CFGNode> loopEntry(
@@ -343,14 +318,11 @@ void CFGVisitor::visitPre(ForNode* node)
 
   stackBegin.push_back(condID);
   stackEnd.push_back(endID);
-
-  std::cout << "Fin visitPre Loop" << std::endl;
 }
 
 void CFGVisitor::visitPre(FuncCall* node)
 {
   int beginID = localID;
-  std::cout << "in visitPre FuncCall " + std::to_string(beginID) << std::endl;
   std::shared_ptr<CFGNode> fCall(
     new CFGNode(beginID,"FuncCall : " + node->getFuncName(), node->getLineNumber())
   );
@@ -364,12 +336,10 @@ void CFGVisitor::visitPre(FuncCall* node)
   stackBegin.push_back(beginID);
   stackEnd.push_back(beginID);
   currID = beginID;
-  std::cout << "Fin visitPre FuncCall" + std::to_string(beginID) << std::endl;
 }
 
 void CFGVisitor::visitPre(MethodNode* node)
 {
-  std::cout << "in visitPre Method" << std::endl;
 
   localID = 0;
   currID = 0;
@@ -395,13 +365,10 @@ void CFGVisitor::visitPre(MethodNode* node)
 
   stackBegin.push_back(entryID);
   stackEnd.push_back(exitID);
-
-  std::cout << "Fin visitPre Method" << std::endl;
 }
 
 void CFGVisitor::visitPre(ReturnNode* node)
 {
-  std::cout << "in visitPre return" << std::endl;
   int beginID = localID;
   localID++;
   std::shared_ptr<CFGNode> returnEntry(
@@ -416,21 +383,16 @@ void CFGVisitor::visitPre(ReturnNode* node)
   graph.back().addReverseVertice(exitID, beginID);
 
   needlink = false;
-
-  std::cout << "Fin visitPre return" << std::endl;
 }
 
 void CFGVisitor::visitPost(AssignNode* node)
 {
-  std::cout << "in visitPost Assign" << std::endl;
   stackBegin.pop_back();
   stackEnd.pop_back();
-  std::cout << "Fin visitPost Assign" << std::endl;
 }
 
 void CFGVisitor::visitPost(CaseNode* node)
 {
-  std::cout << "in visitPost CaseNode" << std::endl;
   int beginID = stackBegin.back();
   int endID = stackEnd.back();
   if (needlink) {
@@ -441,15 +403,12 @@ void CFGVisitor::visitPost(CaseNode* node)
   currID = endID;
   stackBegin.pop_back();
   stackEnd.pop_back();
-  std::cout << "in visitPost CaseNode" << std::endl;
 }
 
 void CFGVisitor::visitPost(FuncCall* node)
 {
-  std::cout << "in visitPost FuncCall" << std::endl;
   stackBegin.pop_back();
   stackEnd.pop_back();
-  std::cout << "Fin visitPost FuncCall" << std::endl;
 }
 
 void CFGVisitor::visitPost(VarNode* node)
@@ -457,15 +416,12 @@ void CFGVisitor::visitPost(VarNode* node)
   if (!node->isInitialised()) {
     return;
   }
-  std::cout << "in visitPost VarDecl" << std::endl;
   stackBegin.pop_back();
   stackEnd.pop_back();
-  std::cout << "Fin visitPost VarDecl" << std::endl;
 }
 
 void CFGVisitor::visitPost(MethodNode* node)
 {
-  std::cout << "in visitPost Method" << std::endl;
   int endID = stackEnd.back();
   if (needlink) {
     graph.back().addVertice(currID, endID);
@@ -488,12 +444,10 @@ void CFGVisitor::visitPost(MethodNode* node)
   localID = 0;
   entryID = 0;
   exitID = 0;
-  std::cout << "Fin visitPost Method" << std::endl;
 }
 
 void CFGVisitor::visitPost(IfNode* node)
 {
-  std::cout << "in visitPost cond" << std::endl;
   //currNode = currNode->getParent();
   ifStackBegin.pop_back();
   ifStackEnd.pop_back();
@@ -507,12 +461,10 @@ void CFGVisitor::visitPost(IfNode* node)
   currID = endID;
   stackBegin.pop_back();
   stackEnd.pop_back();
-  std::cout << "in visitPost cond" << std::endl;
 }
 
 void CFGVisitor::visitPost(SwitchNode* node)
 {
-  std::cout << "in visitPost SwitchNode" << std::endl;
   int beginID = stackBegin.back();
   int endID = stackEnd.back();
   if (needlink) {
@@ -524,7 +476,6 @@ void CFGVisitor::visitPost(SwitchNode* node)
   stackBegin.pop_back();
   stackEnd.pop_back();
   loopStackEnd.pop_back();
-  std::cout << "in visitPost SwitchNode" << std::endl;
 }
 
 void CFGVisitor::visitPost(WhileNode* node)
